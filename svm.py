@@ -11,9 +11,12 @@ class svm():
 
 
     def train(self):
-        print(self._gramMatrix())
+        K = self._gramMatrix()
         # a = langranging_multipliers()
         # b = getB()
+
+
+    def predict(self):
 
 
     # def langranging_multipliers():
@@ -23,9 +26,6 @@ class svm():
     #     getA()
 
 
-
-    # def getB():
-    # def Kernal():
     def _gramMatrix(self):
         n_samples, n_features = self._x.shape
         K = np.zeros((n_samples, n_samples))

@@ -7,8 +7,8 @@ import parser
 Y = parser.getNumpeeArray("TrainY.npy")
 X = parser.getNumpeeArray("TrainX.npy")
 
-def f(x, y):
+def linear(x, y):
     return np.inner(x, y)
 
 
-t = svm(X,Y,f)
+t = svm(X,Y,linear)
