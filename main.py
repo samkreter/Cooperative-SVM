@@ -4,6 +4,11 @@ import numpy as np
 from svm import svm
 import parser
 
+
+
+currSVMTrainClass = 1
+adjustedLables = parser.adjustLabels("TrainY.npy",currSVMTrainClass)
+
 Y = parser.getNumpeeArray("TrainY.npy")
 X = parser.getNumpeeArray("TrainX.npy")
 

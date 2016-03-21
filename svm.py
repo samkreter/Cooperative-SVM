@@ -12,21 +12,15 @@ class svm():
 
     def train(self):
         K = self._gramMatrix()
-        # a = langrangian_multipliers()
-        # b = getB()
+
 
     # eqn 7.13
     def predict(self, x, b):
         summation = 0;
         for n, x_n in enumerate(self._x):
             summation += self._a[n] * self._y[n] * self._kernel(x, x_n)
-        return prediction = summation + b
+        return summation + b
 
-    # def langrangian_multipliers():
-    #     _gramMatrix()
-    #     _getP
-    #     _getQ
-    #     _getA()
 
 
     def _gramMatrix(self):
@@ -37,11 +31,11 @@ class svm():
                 K[i, j] = self._kernel(x_i, x_j)
         return K
 
-    def _getP():
+    # def _getP():
 
 
-    def _getQ():
+    # def _getQ():
 
 
-    # Stores in self._a to be used in predict function
-    def _getA():
+    # # Stores in self._a to be used in predict function
+    # def _getA():
