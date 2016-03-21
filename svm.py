@@ -7,7 +7,7 @@ class svm():
         self._y = Y
         self._b = None
         self._supportVectors = None
-        self._sVLables = None
+        self._supportLables = None
         self._supportWeights = None
         self._kernel = Kernel
         self.train()
@@ -25,7 +25,11 @@ class svm():
         #now we can use that to use only the vectors that we need
         self._supportVectors = self._x[supportIndexes]
         self._supportWeights = A[supportIndexes]
-        self._sVLables = self._y[supportIndexes]
+        self._supportLables = self._y[supportIndexes]
+
+        #eqn 7.18
+        #using zip trick for the labes and vectors from the tullo blog reference [3]
+        self._b = np.mean(tn - self.predict(xn,0) for (tn,xn) in zip(self.supportLables,supportVectors))
 
 
 
@@ -33,8 +37,8 @@ class svm():
     # eqn 7.13
     def predict(self, x, b):
         summation = 0;
-        for n, x_n in enumerate(self._x):
-            summation += self._a[n] * self._y[n] * self._kernel(x, x_n)
+        for n, x_n in enumerate(self.supportVectors):
+            summation += self._supportWeights[n] * self._supportLables[n] * self._kernel(x, x_n)
         return summation + b
 
     # def langranging_multipliers():
