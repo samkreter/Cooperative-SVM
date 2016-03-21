@@ -16,8 +16,6 @@ class svm():
         # b = getB()
 
 
-    def predict(self):
-
 
     # def langranging_multipliers():
     #     getGramMatrix()
