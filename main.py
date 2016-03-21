@@ -6,7 +6,7 @@ import parser
 import kernels
 
 
-
+#yall know what this bad boy does
 def main():
     svms = trainSVMs("TrainX.npy","TrainY.npy",kernels.linear())
 
