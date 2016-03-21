@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.spatial.distance import pdist, squareform
 
 class svm():
     def __init__(self, X,Y,Kernel):
@@ -8,7 +9,8 @@ class svm():
         self.train()
 
     def train(self):
-        K = self._gramMatrix()
+        K = self._gramMatrixGaussian(1)
+        print(K)
 
 
     # eqn 7.13
@@ -24,6 +26,10 @@ class svm():
     #     getQ
     #     getA()
 
+    def _gramMatrixGaussian(self,sigma):
+        pairwise_dists = squareform(pdist(self._x, 'euclidean'))
+        K = np.exp(pairwise_dists ** 2 / sigma ** 2)
+        return K
 
     def _gramMatrix(self):
         n_samples, n_features = self._x.shape
