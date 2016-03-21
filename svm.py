@@ -1,10 +1,12 @@
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
+import cvxopt
 
 class svm():
     def __init__(self, X,Y,Kernel):
         self._x = X
         self._y = Y
+        self._c = 1
         self._b = None
         self._supportVectors = None
         self._supportLables = None
@@ -34,8 +36,7 @@ class svm():
     def _compute_multipliers(self, X, y):
         n_samples, n_features = X.shape
 
-        K = self._gramMatrixGaussian(1)
-
+        K = self._gramMatrix()
         # Solves
         # min 1/2 x^T P x + q^T x
         # s.t.
@@ -58,6 +59,9 @@ class svm():
         h = cvxopt.matrix(np.vstack((h_std, h_slack)))
 
         A = cvxopt.matrix(y, (1, n_samples))
+
+        print(A.size)
+        #exit(-1)
         b = cvxopt.matrix(0.0)
 
         solution = cvxopt.solvers.qp(P, q, G, h, A, b)
@@ -67,7 +71,10 @@ class svm():
 
 
     # eqn 7.13
-    def predict(self, x, b=self._b):
+    def predict(self, x, b):
+        if(b == None):
+            b = self._b
+
         summation = 0;
         for n, x_n in enumerate(self.supportVectors):
             summation += self._supportWeights[n] * self._supportLables[n] * self._kernel(x, x_n)

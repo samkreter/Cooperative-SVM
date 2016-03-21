@@ -19,4 +19,4 @@ def adjustLabels(originalLabels,PrimaryClass):
             newLabels.append([1])
         else:
             newLabels.append([-1])
-    return newLabels
+    return np.array(newLabels)

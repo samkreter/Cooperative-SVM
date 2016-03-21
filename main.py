@@ -8,7 +8,10 @@ import kernels
 
 #yall know what this bad boy does
 def main():
-    svms = trainSVMs("TrainX.npy","TrainY.npy",kernels.linear())
+    Y = parser.getNumpyArray("TrainY.npy")
+    X = parser.getNumpyArray("TrainX.npy")
+    t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
+    print(t.predict(X[0]))
 
 
 # adjusts the y labels to 1 for curr and -1 for not current
