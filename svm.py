@@ -36,8 +36,7 @@ class svm():
     # def _getP():
 
 
-    def _getQ():
+    # def _getQ():
 
-    # Stores in self._a to be used in predict function
-    def _getA():
->>>>>>> 74b5500649fe9e0fda35eaee7001085c49afede9
+    # # Stores in self._a to be used in predict function
+    # def _getA():
