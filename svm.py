@@ -13,8 +13,7 @@ class svm():
         self.train()
 
     def train(self):
-        K = self._gramMatrixGaussian(1)
-        # A = _getA
+        A = self._compute_multipliers(self._x,self._y)
 
         #cool trick I got from tullo with numpy arrays, I'm definitly useing
         # this alot
@@ -32,10 +31,43 @@ class svm():
         self._b = np.mean(tn - self.predict(xn,0) for (tn,xn) in zip(self.supportLables,supportVectors))
 
 
+    def _compute_multipliers(self, X, y):
+        n_samples, n_features = X.shape
+
+        K = self._gramMatrixGaussian(1)
+
+        # Solves
+        # min 1/2 x^T P x + q^T x
+        # s.t.
+        #  Gx \coneleq h
+        #  Ax = b
+
+        P = cvxopt.matrix(np.outer(y, y) * K)
+        q = cvxopt.matrix(-1 * np.ones(n_samples))
+
+        # -a_i \leq 0
+        # TODO(tulloch) - modify G, h so that we have a soft-margin classifier
+        G_std = cvxopt.matrix(np.diag(np.ones(n_samples) * -1))
+        h_std = cvxopt.matrix(np.zeros(n_samples))
+
+        # a_i \leq c
+        G_slack = cvxopt.matrix(np.diag(np.ones(n_samples)))
+        h_slack = cvxopt.matrix(np.ones(n_samples) * self._c)
+
+        G = cvxopt.matrix(np.vstack((G_std, G_slack)))
+        h = cvxopt.matrix(np.vstack((h_std, h_slack)))
+
+        A = cvxopt.matrix(y, (1, n_samples))
+        b = cvxopt.matrix(0.0)
+
+        solution = cvxopt.solvers.qp(P, q, G, h, A, b)
+
+        # Lagrange multipliers
+        return np.ravel(solution['x'])
 
 
     # eqn 7.13
-    def predict(self, x, b):
+    def predict(self, x, b=self._b):
         summation = 0;
         for n, x_n in enumerate(self.supportVectors):
             summation += self._supportWeights[n] * self._supportLables[n] * self._kernel(x, x_n)
