@@ -12,14 +12,14 @@ class svm():
 
     def train(self):
         K = self._gramMatrix()
-        # a = langranging_multipliers()
+        # a = langrangian_multipliers()
         # b = getB()
 
 
     def predict(self):
 
 
-    # def langranging_multipliers():
+    # def langrangian_multipliers():
     #     getGramMatrix()
     #     getP
     #     getQ
