@@ -5,12 +5,21 @@ class svm():
     def __init__(self, X,Y,Kernel):
         self._x = X
         self._y = Y
+        self._a = None
+        self._b = None
+        self._supportVectors = None
+        self._sVLables = None
+        self._supportWeights = None
         self._kernel = Kernel
         self.train()
 
     def train(self):
         K = self._gramMatrixGaussian(1)
-        print(K)
+        T = self._gramMatrix()
+        print(K[1][1])
+        print("################################")
+        print(T[1][1])
+        exit(-1)
 
 
     # eqn 7.13
@@ -26,6 +35,7 @@ class svm():
     #     getQ
     #     getA()
 
+    #comute the gram matrix super fast but jsut for the guassian/RBF
     def _gramMatrixGaussian(self,sigma):
         pairwise_dists = squareform(pdist(self._x, 'euclidean'))
         K = np.exp(pairwise_dists ** 2 / sigma ** 2)
@@ -38,6 +48,9 @@ class svm():
             for j, x_j in enumerate(self._x):
                 K[i, j] = self._kernel(x_i, x_j)
         return K
+
+    def getB(self):
+        np.mean()
 
     # def _getP():
 
