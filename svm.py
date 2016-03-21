@@ -19,7 +19,7 @@ class svm():
     def predict(self):
 
 
-    # def langranging_multipliers():
+    # def langrangian_multipliers():
     #     getGramMatrix()
     #     getP
     #     getQ
