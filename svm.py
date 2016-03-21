@@ -5,7 +5,6 @@ class svm():
     def __init__(self, X,Y,Kernel):
         self._x = X
         self._y = Y
-        self._a = None
         self._b = None
         self._supportVectors = None
         self._sVLables = None
@@ -15,11 +14,20 @@ class svm():
 
     def train(self):
         K = self._gramMatrixGaussian(1)
-        T = self._gramMatrix()
-        print(K[1][1])
-        print("################################")
-        print(T[1][1])
-        exit(-1)
+        # A = _getA
+
+        #cool trick I got from tullo with numpy arrays, I'm definitly useing
+        # this alot
+        #It returns true for all indeces greater than 0 and false for less
+        #if a=0 for an element that means it is not a support vector
+        supportIndexes = A > 0
+
+        #now we can use that to use only the vectors that we need
+        self._supportVectors = self._x[supportIndexes]
+        self._supportWeights = A[supportIndexes]
+        self._sVLables = self._y[supportIndexes]
+
+
 
 
     # eqn 7.13
