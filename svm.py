@@ -1,14 +1,11 @@
 import numpy as np
 
-
 class svm():
-
     def __init__(self, X,Y,Kernel):
         self._x = X
         self._y = Y
         self._kernel = Kernel
         self.train()
-
 
     def train(self):
         K = self._gramMatrix()
@@ -21,6 +18,11 @@ class svm():
             summation += self._a[n] * self._y[n] * self._kernel(x, x_n)
         return summation + b
 
+    # def langranging_multipliers():
+    #     getGramMatrix()
+    #     getP
+    #     getQ
+    #     getA()
 
 
     def _gramMatrix(self):
@@ -34,8 +36,8 @@ class svm():
     # def _getP():
 
 
-    # def _getQ():
+    def _getQ():
 
-
-    # # Stores in self._a to be used in predict function
-    # def _getA():
+    # Stores in self._a to be used in predict function
+    def _getA():
+>>>>>>> 74b5500649fe9e0fda35eaee7001085c49afede9

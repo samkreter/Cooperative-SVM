@@ -2,7 +2,6 @@ import numpy as np
 import sys
 import string
 
-
 def getNumpyArray(filename):
     return np.load(filename)
 
