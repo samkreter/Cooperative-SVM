@@ -6,7 +6,7 @@ class svm():
     def __init__(self, X,Y,Kernel):
         self._x = X
         self._y = Y
-        self._c = 1
+        self._c = .01
         self._b = None
         self._supportVectors = None
         self._supportLables = None
@@ -33,10 +33,12 @@ class svm():
         self._b = np.mean(tn - self.predict(xn,0) for (tn,xn) in zip(self.supportLables,supportVectors))
 
 
-    def _compute_multipliers(self, X, y):
+    def _compute_multipliers(self, X, p):
         n_samples, n_features = X.shape
+        y = [i*1.0 for i in p]
 
-        K = self._gramMatrix()
+        y = np.ravel(y)
+        K = self._gramMatrixGaussian(1)
         # Solves
         # min 1/2 x^T P x + q^T x
         # s.t.
@@ -60,8 +62,6 @@ class svm():
 
         A = cvxopt.matrix(y, (1, n_samples))
 
-        print(A.size)
-        #exit(-1)
         b = cvxopt.matrix(0.0)
 
         solution = cvxopt.solvers.qp(P, q, G, h, A, b)

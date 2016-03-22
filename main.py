@@ -10,8 +10,16 @@ import kernels
 def main():
     Y = parser.getNumpyArray("TrainY.npy")
     X = parser.getNumpyArray("TrainX.npy")
-    t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
-    print(t.predict(X[0]))
+
+    num_samples = 10
+    num_features = 2
+
+    samples = np.matrix(np.random.normal(size=num_samples * num_features).reshape(num_samples, num_features))
+    labels = 2 * (samples.sum(axis=1) > 0) - 1.0
+
+    t = svm(samples,labels,kernels.linear())
+    #t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
+    #print(t.predict(X[0]))
 
 
 # adjusts the y labels to 1 for curr and -1 for not current

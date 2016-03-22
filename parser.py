@@ -16,7 +16,7 @@ def adjustLabels(originalLabels,PrimaryClass):
     newLabels = []
     for label in originalLabels:
         if label == PrimaryClass:
-            newLabels.append([1])
+            newLabels.append([1*1.])
         else:
-            newLabels.append([-1])
+            newLabels.append([-1*1.])
     return np.array(newLabels)
