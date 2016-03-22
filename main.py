@@ -4,8 +4,8 @@ import numpy as np
 from svm import svm
 import parser
 
-Y = parser.getNumpeeArray("TrainY.npy")
-X = parser.getNumpeeArray("TrainX.npy")
+Y = parser.getNumpyArray("TrainY.npy")
+X = parser.getNumpyArray("TrainX.npy")
 
 def linear(x, y):
     return np.inner(x, y)

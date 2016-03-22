@@ -45,3 +45,4 @@ class svm():
 
     # Stores in self._a to be used in predict function
     def _getA():
+        
