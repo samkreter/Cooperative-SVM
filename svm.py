@@ -30,7 +30,13 @@ class svm():
 
         #eqn 7.18
         #using zip trick for the labes and vectors from the tullo blog reference [3]
-        self._b = np.mean(tn - self.predict(xn,0) for (tn,xn) in zip(self.supportLables,supportVectors))
+
+        # test = [self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)]
+
+        # print(test)
+        # exit()
+
+        self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)])
 
 
     def _compute_multipliers(self, X, p):
@@ -38,7 +44,7 @@ class svm():
         y = [i*1.0 for i in p]
 
         y = np.ravel(y)
-        K = self._gramMatrixGaussian(1)
+        K = self._gramMatrix()
         # Solves
         # min 1/2 x^T P x + q^T x
         # s.t.
@@ -71,14 +77,14 @@ class svm():
 
 
     # eqn 7.13
-    def predict(self, x, b):
+    def predict(self, x, b=None):
         if(b == None):
             b = self._b
 
-        summation = 0;
-        for n, x_n in enumerate(self.supportVectors):
+        summation = b;
+        for n, x_n in enumerate(self._supportVectors):
             summation += self._supportWeights[n] * self._supportLables[n] * self._kernel(x, x_n)
-        return summation + b
+        return summation.item()
 
     # def langranging_multipliers():
     #     getGramMatrix()
