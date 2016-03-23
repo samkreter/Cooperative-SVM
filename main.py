@@ -12,7 +12,7 @@ def main():
     Y = parser.getNumpyArray("TrainY.npy")
     X = parser.getNumpyArray("TrainX.npy")
 
-    num_samples = 1655
+    num_samples = 500
     num_features = 45
 
     samples = np.matrix(np.random.normal(size=num_samples * num_features).reshape(num_samples, num_features))
@@ -20,6 +20,7 @@ def main():
 
     t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
 
+    print(samples[0][0])
     s = t.predict(samples[0][0])
     print(s)
     print(labels[0][0])
@@ -81,14 +82,55 @@ def trainBootstrap():
 
     return svms
 
+# takes pre-trained svms and runs points through them, reporting statistics
+def predictBootstrap(svms):
+    Y = parser.getNumpyArray("TrainY.npy")
+    X = parser.getNumpyArray("TrainX.npy")
 
-def predict():
-    
+    # shuffle arrays together to keep points with classifiers correct 
+    combined = list(zip(X, Y))
+    random.shuffle(combined)
+    X[:], Y[:] = zip(*combined)
+    X = X[:1]
+    classifiers = np.unique(Y.ravel())
+
+    for i, point in enumerate(X):
+        print(point)
+        # for each classifier j
+        success = False
+        for j, classifier in enumerate(classifiers):
+            print("Class ", j)
+            if(not success):
+                count = 0
+                # send to each svm to be tested for commitee vote
+                for k in range(0,7):
+                    print(" SVM ", k)
+                    # update count for each commitee vote in this class
+                    print(svms[j][k].predict(point))
+                    if(np.sign(svms[j][k].predict(point)) > 0):
+                        count += 1
+                # check if count is high enough to accept as answer
+                if(count >= 4):
+                    print("Point real: %d\nPoint prediction: %d", Y[i], j)
+                    success = True
+                    break
+            else:
+                break
+        if(not success):
+            print("Point unclassified.\nPoint real: %d", Y[i])
+
+
+# def predict(svm, point, realClass):
+#     if(svm.predict(point) == realClass):
+#         return True
+#     else:
+#         return False
 
 
 if __name__ == '__main__':
     if(len(sys.argv) >= 2 and sys.argv[1] == '1'):
-        trainBootstrap()
+        svms = trainBootstrap()
+        predictBootstrap(svms)
     else:
         main()
 
