@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 import cvxopt
+import multiplyer
 
 class svm():
     def __init__(self, X,Y,Kernel):
@@ -15,8 +16,9 @@ class svm():
         self.train()
 
     def train(self):
-        A = self._compute_multipliers(self._x,self._y)
-
+        #A = self._compute_multipliers(self._x,self._y)
+        K = self._gramMatrix()
+        A = multiplyer.CalculateLagrangeMultipliers(self._y,K,self._c)
         #cool trick I got from tullo with numpy arrays, I'm definitly useing
         # this alot
         #It returns true for all indeces greater than 0 and false for less
