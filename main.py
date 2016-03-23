@@ -8,8 +8,17 @@ import kernels
 
 #yall know what this bad boy does
 def main():
-    Y = parser.getNumpyArray("TrainY.npy")
+
     X = parser.getNumpyArray("TrainX.npy")
+    Y = parser.getNumpyArray("TrainY.npy")
+
+
+    # xs = np.array_split(xM,2)
+    # ys = np.array_split(yM,2)
+
+
+    # Y =ys[0]
+    # X =xs[0]
 
     # num_samples = 160
     # num_features = 2
@@ -23,8 +32,11 @@ def main():
     # s = t.predict(samples[1][0])
     # print(s)
     # print(labels[1][0])
-    t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
-    #print(t.predict(X[0]))
+    t = svm(X,parser.adjustLabels(Y,1),kernels.gaussian(1))
+
+    # for i in range(4):
+    #     print(t.predict(np.resize(xs[1],(160,2))[i]))
+    #     print(np.resize(ys[1],160)[i])
 
 
 # adjusts the y labels to 1 for curr and -1 for not current

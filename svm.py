@@ -41,9 +41,9 @@ class svm():
 
     def _compute_multipliers(self, X, p):
         n_samples, n_features = X.shape
-        y = [i*1.0 for i in p]
+        y = p
 
-        y = np.ravel(y)
+
         K = self._gramMatrix()
         # Solves
         # min 1/2 x^T P x + q^T x
@@ -52,7 +52,7 @@ class svm():
         #  Ax = b
 
         P = cvxopt.matrix(np.outer(y, y) * K)
-        q = cvxopt.matrix(-1 * np.ones(n_samples))
+        q = cvxopt.matrix(np.ones(n_samples))
 
         # -a_i \leq 0
         # TODO(tulloch) - modify G, h so that we have a soft-margin classifier
@@ -68,9 +68,9 @@ class svm():
 
         A = cvxopt.matrix(y, (1, n_samples))
 
-        b = cvxopt.matrix(0.0)
+        b = cvxopt.matrix([0.0])
 
-        solution = cvxopt.solvers.qp(P, q, G, h, A, b)
+        solution = cvxopt.solvers.qp(P, q)
 
         # Lagrange multipliers
         return np.ravel(solution['x'])
