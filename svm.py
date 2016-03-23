@@ -42,7 +42,7 @@ class svm():
     def _compute_multipliers(self, X, p):
         n_samples, n_features = X.shape
         y = [i*1.0 for i in p]
-
+        print("fuckingingigin")
         y = np.ravel(y)
         K = self._gramMatrix()
         # Solves
@@ -71,7 +71,7 @@ class svm():
         b = cvxopt.matrix(0.0)
 
         solution = cvxopt.solvers.qp(P, q, G, h, A, b)
-
+        print("no fucking way")
         # Lagrange multipliers
         return np.ravel(solution['x'])
 
