@@ -1,5 +1,5 @@
 import numpy as np
-
+import sys
 #homemade lovin'
 from svm import svm
 import parser
@@ -51,46 +51,61 @@ def trainSVMs(xFileName, yFIleName, Kernel):
 def crossValidate():
     numCrossValidationGroups = 5;
 
-    svms = [][]
+    svms = []
 
-	Y = parser.getNumpyArray("TrainY.npy")
-	X = parser.getNumpyArray("TrainX.npy")
+    Y = parser.getNumpyArray("TrainY.npy")
+    X = parser.getNumpyArray("TrainX.npy")
 
-	# get each class label
-	classToTrain = np.unique(Y.ravel())
-	
-	numEachClass = []
-	for i, classifier in enumerate(classToTrain):
-		numEachClass[i] = y.count(classifier)
+    # get each class label
+    classesToTrain = np.unique(Y.ravel())
+    
+    # get the number of each class in Y
+    numEachClass = []
+    for i, classifier in enumerate(classesToTrain):
+        count = 0
+        for elem in Y:
+            if (elem == classifier):
+                count += 1
 
-	# cross-validate for each class
-	for i, currClass in enumerate(classToTrain):
-		classSvms = []
-		# shuffle arrays together to keep points with classifiers correct 
-		combined = zip(X, Y)
-		random.shuffle(combined)
-		X[:], Y[:] = zip(*combined)
-		# adjust Y to be of form not class, class (-1, 1)
-		newY = parser.adjustLabels(Y,currClass)
+        numEachClass.append(count)
 
-		# split each class's points into groups to cross validate.  Exclude 1/5 each time
-		for j in range(numEachClass[i]):
-			trainY = numpy.delete()
-			svms.append(svm(X,parser.adjustLabels(Y,currClass),Kernel))
+    # shuffle arrays together to keep points with classifiers correct 
+    combined = zip(X, Y)
+    np.random.shuffle(combined)
+    X[:], Y[:] = zip(*combined)
+    
+    # cross-validate for each class
+    for i, currClass in enumerate(classesToTrain):
+        classSvms = []
+        # adjust Y to be of form not class, class (-1, 1)
+        newY = parser.adjustLabels(Y, currClass)
 
+        # split each class's points into groups to cross validate.  Exclude 1/5 each time
+        for j in range(numEachClass[i]):
+            start = j * numEachClass[i]/numCrossValidationGroups
+            end = ((j+1) * numEachClass[i]/numCrossValidationGroups)
+            deleteRange = numpy.arange(start, end)
+            # Get testing groups
+            trainY = numpy.delete(newY, deleteRange)
+            trainX = numpy.delete(X, deleteRange)
+            # Get training groups
+            testY = newY[deleteRange]
+            testX = X[deleteRange]
+            
+            # train group
+            classSvms.append(svm(X, parser.adjustLabels(trainY, currClass), Kernel))
 
-	    svms.append(svm(X,parser.adjustLabels(Y,currClass),Kernel))
+        svms[i].append(classSvms)
 
     return svms
 
 
 if __name__ == '__main__':
-	if(argv[1] == true){
-		crossValidate()
-	}
-	else{
-    	main()
-    }
+    if(sys.argv[1] == '1'):
+        print("here")
+        crossValidate()
+    else:
+        main()
 
 
 
