@@ -9,7 +9,7 @@ class svm():
         self._c = .01
         self._b = None
         self._supportVectors = None
-        self._supportLables = None
+        self._supportLabels = None
         self._supportWeights = None
         self._kernel = Kernel
         self.train()
@@ -19,14 +19,14 @@ class svm():
 
         #cool trick I got from tullo with numpy arrays, I'm definitly useing
         # this alot
-        #It returns true for all indeces greater than 0 and false for less
+        #It returns true for all indices greater than 0 and false for less
         #if a=0 for an element that means it is not a support vector
-        supportIndexes = A > 0
+        supportIndices = A > 0
 
         #now we can use that to use only the vectors that we need
-        self._supportVectors = self._x[supportIndexes]
-        self._supportWeights = A[supportIndexes]
-        self._supportLables = self._y[supportIndexes]
+        self._supportVectors = self._x[supportIndices]
+        self._supportWeights = A[supportIndices]
+        self._supportLabels = self._y[supportIndices]
 
         #eqn 7.18
         #using zip trick for the labes and vectors from the tullo blog reference [3]
@@ -92,7 +92,7 @@ class svm():
     #     getQ
     #     getA()
 
-    #comute the gram matrix super fast but jsut for the guassian/RBF
+    #comute the gram matrix super fast but just for the guassian/RBF
     def _gramMatrixGaussian(self,sigma):
         pairwise_dists = squareform(pdist(self._x, 'euclidean'))
         K = np.exp(pairwise_dists ** 2 / sigma ** 2)
