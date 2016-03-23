@@ -20,9 +20,6 @@ def main():
 
     t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
 
-
-
-
     s = t.predict(samples[0][0])
     print(s)
     print(labels[0][0])
@@ -49,7 +46,7 @@ def trainSVMs(xFileName, yFIleName, Kernel):
     return svms
 
 
-def crossValidate():
+def bootstrap():
     numCrossValidationGroups = 5;
 
     svms = []
@@ -59,54 +56,42 @@ def crossValidate():
 
     # get each class label
     classesToTrain = np.unique(Y.ravel())
-    
-    # get the number of each class in Y
-    numEachClass = []
-    for i, classifier in enumerate(classesToTrain):
-        count = 0
-        for elem in Y:
-            if (elem == classifier):
-                count += 1
 
-        numEachClass.append(count)
-
-    # shuffle arrays together to keep points with classifiers correct 
-
-    combined = list(zip(X, Y))
-    random.shuffle(combined)
-    X[:], Y[:] = zip(*combined)
-
-    # cross-validate for each class
+    # bootstrap for each class
     for i, currClass in enumerate(classesToTrain):
         classSvms = []
+
         # adjust Y to be of form not class, class (-1, 1)
         newY = parser.adjustLabels(Y, currClass)
 
-        # split each class's points into groups to cross validate.  Exclude 1/5 each time
-        for j in range(numEachClass[i]):
-            start = j * numEachClass[i]/numCrossValidationGroups
-            end = ((j+1) * numEachClass[i]/numCrossValidationGroups)
-            deleteRange = np.arange(start, end)
-            deleteRange = deleteRange.astype("int")
-            print(deleteRange)
-            # Get testing groups
-            trainY = np.delete(newY, deleteRange)
-            trainX = np.delete(X, deleteRange)
-            # Get training groups
-            testY = newY[deleteRange]
-            testX = X[deleteRange]
+        # bootstrap each group 7 times.  Use 500 each time
+        for j in range(0, 7):
+            print("Training class %d.  In iteration %d", currClass, j)
+            # shuffle arrays together to keep points with classifiers correct 
+            combined = list(zip(X, newY))
+            random.shuffle(combined)
+            X[:], newY[:] = zip(*combined)
+
+            # Get training groups: first 500 in group
+            trainY = newY[:500]
+            trainX = X[:500]
             
             # train group
-            classSvms.append(svm(X, parser.adjustLabels(trainY, currClass), kernels.linear()))
+            classSvms.append(svm(trainX, parser.adjustLabels(trainY, currClass), kernels.linear()))
 
-        svms[i].append(classSvms)
+        svms.append(classSvms)
 
     return svms
 
 
+def predict(){
+    
+}
+
+
 if __name__ == '__main__':
     if(len(sys.argv) >= 2 and sys.argv[1] == '1'):
-        crossValidate()
+        bootstrap()
     else:
         main()
 
