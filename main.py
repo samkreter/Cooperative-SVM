@@ -46,11 +46,9 @@ def trainSVMs(xFileName, yFIleName, Kernel):
     return svms
 
 
-def bootstrap():
+def trainBootstrap():
     numCrossValidationGroups = 5;
-
     svms = []
-
     Y = parser.getNumpyArray("TrainY.npy")
     X = parser.getNumpyArray("TrainX.npy")
 
@@ -84,14 +82,13 @@ def bootstrap():
     return svms
 
 
-def predict(){
+def predict():
     
-}
 
 
 if __name__ == '__main__':
     if(len(sys.argv) >= 2 and sys.argv[1] == '1'):
-        bootstrap()
+        trainBootstrap()
     else:
         main()
 
