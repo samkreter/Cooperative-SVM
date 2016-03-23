@@ -11,13 +11,20 @@ def main():
     Y = parser.getNumpyArray("TrainY.npy")
     X = parser.getNumpyArray("TrainX.npy")
 
-    num_samples = 10
+    num_samples = 160
     num_features = 2
 
     samples = np.matrix(np.random.normal(size=num_samples * num_features).reshape(num_samples, num_features))
     labels = 2 * (samples.sum(axis=1) > 0) - 1.0
 
     t = svm(samples,labels,kernels.linear())
+
+
+
+
+    s = t.predict(samples[0][0])
+    print(s)
+    print(labels[0][0])
     #t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
     #print(t.predict(X[0]))
 
