@@ -36,7 +36,7 @@ class svm():
         # print(test)
         # exit()
 
-        self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)])
+        self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLabels,self._supportVectors)])
 
 
     def _compute_multipliers(self, X, p):
@@ -83,7 +83,7 @@ class svm():
 
         summation = b;
         for n, x_n in enumerate(self._supportVectors):
-            summation += self._supportWeights[n] * self._supportLables[n] * self._kernel(x, x_n)
+            summation += self._supportWeights[n] * self._supportLabels[n] * self._kernel(x, x_n)
         return summation.item()
 
     # def langranging_multipliers():
