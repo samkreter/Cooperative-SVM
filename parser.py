@@ -12,7 +12,7 @@ def write_numpy_array_to_txt(filename, newFileName):
 		file.write( "\n" + np.array_str(row) + ",")
 	file.close()
 
-def adjustLabels(originalLabels,PrimaryClass):
+def adjustLabels(originalLabels, PrimaryClass):
     newLabels = []
     for label in originalLabels:
         if label == PrimaryClass:

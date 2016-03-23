@@ -27,7 +27,7 @@ def main():
 # \param yFilename: filename for the N lables for the training vectors
 # \param Kernel:  the kernel function to user on the data
 # \return: list of trained svms
-def trainSVMs(xFileName,yFIleName,Kernel):
+def trainSVMs(xFileName, yFIleName, Kernel):
     svms = []
 
     Y = parser.getNumpyArray(yFIleName)
@@ -41,8 +41,50 @@ def trainSVMs(xFileName,yFIleName,Kernel):
     return svms
 
 
+def crossValidate():
+    numCrossValidationGroups = 5;
+
+    svms = [][]
+
+	Y = parser.getNumpyArray("TrainY.npy")
+	X = parser.getNumpyArray("TrainX.npy")
+
+	# get each class label
+	classToTrain = np.unique(Y.ravel())
+	
+	numEachClass = []
+	for i, classifier in enumerate(classToTrain):
+		numEachClass[i] = y.count(classifier)
+
+	# cross-validate for each class
+	for i, currClass in enumerate(classToTrain):
+		classSvms = []
+		# shuffle arrays together to keep points with classifiers correct 
+		combined = zip(X, Y)
+		random.shuffle(combined)
+		X[:], Y[:] = zip(*combined)
+		# adjust Y to be of form not class, class (-1, 1)
+		newY = parser.adjustLabels(Y,currClass)
+
+		# split each class's points into groups to cross validate.  Exclude 1/5 each time
+		for j in range(numEachClass[i]):
+			trainY = numpy.delete()
+			svms.append(svm(X,parser.adjustLabels(Y,currClass),Kernel))
+
+
+	    svms.append(svm(X,parser.adjustLabels(Y,currClass),Kernel))
+
+    return svms
+
+
 if __name__ == '__main__':
-    main()
+	if(argv[1] == true){
+		crossValidate()
+	}
+	else{
+    	main()
+    }
+
 
 
 
