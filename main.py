@@ -12,6 +12,10 @@ def main():
     X = parser.getNumpyArray("TrainX.npy")
     Y = parser.getNumpyArray("TrainY.npy")
 
+    x1 = X[:500]
+    y1 = Y[:500]
+    x2 = X[500:600]
+    y2 = Y[500:600]
 
     # xs = np.array_split(xM,2)
     # ys = np.array_split(yM,2)
@@ -32,11 +36,11 @@ def main():
     # s = t.predict(samples[1][0])
     # print(s)
     # print(labels[1][0])
-    t = svm(X,parser.adjustLabels(Y,1),kernels.gaussian(1))
+    t = svm(x1,parser.adjustLabels(y1,1),kernels.gaussian(1))
 
-    # for i in range(4):
-    #     print(t.predict(np.resize(xs[1],(160,2))[i]))
-    #     print(np.resize(ys[1],160)[i])
+    for i in range(20):
+        print(t.predict(x2[i]))
+        print(y2[i])
 
 
 # adjusts the y labels to 1 for curr and -1 for not current

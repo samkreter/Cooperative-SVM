@@ -16,9 +16,9 @@ class svm():
         self.train()
 
     def train(self):
-        #A = self._compute_multipliers(self._x,self._y)
-        K = self._gramMatrix()
-        A = multiplyer.CalculateLagrangeMultipliers(self._y,K,self._c)
+        A = self._compute_multipliers(self._x,self._y)
+        # K = self._gramMatrix()
+        # A = multiplyer.CalculateLagrangeMultipliers(self._y,K,self._c)
         #cool trick I got from tullo with numpy arrays, I'm definitly useing
         # this alot
         #It returns true for all indeces greater than 0 and false for less
@@ -41,10 +41,8 @@ class svm():
         self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)])
 
 
-    def _compute_multipliers(self, X, p):
+    def _compute_multipliers(self, X, y):
         n_samples, n_features = X.shape
-        y = p
-
 
         K = self._gramMatrix()
         # Solves
@@ -54,7 +52,7 @@ class svm():
         #  Ax = b
 
         P = cvxopt.matrix(np.outer(y, y) * K)
-        q = cvxopt.matrix(np.ones(n_samples))
+        q = cvxopt.matrix(-1 * np.ones(n_samples))
 
         # -a_i \leq 0
         # TODO(tulloch) - modify G, h so that we have a soft-margin classifier
@@ -69,10 +67,9 @@ class svm():
         h = cvxopt.matrix(np.vstack((h_std, h_slack)))
 
         A = cvxopt.matrix(y, (1, n_samples))
+        b = cvxopt.matrix(0.0)
 
-        b = cvxopt.matrix([0.0])
-
-        solution = cvxopt.solvers.qp(P, q)
+        solution = cvxopt.solvers.qp(P, q,G,h,A,b)
 
         # Lagrange multipliers
         return np.ravel(solution['x'])
