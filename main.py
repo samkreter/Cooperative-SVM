@@ -8,26 +8,55 @@ import random
 
 NUM_COMMITTEES = 2
 
+import matplotlib.pyplot as plt
+from randData import twoClasses
 
 #yall know what this bad boy does
 def main():
-    Y = parser.getNumpyArray("TrainY.npy")
+
     X = parser.getNumpyArray("TrainX.npy")
+    Y = parser.getNumpyArray("TrainY.npy")
+    #(X,Y) = twoClasses(600,1,2)
+    #np.set_printoptions(threshold=np.nan)
+    #print(X)
+
+    x1 = X[:500]
+    y1 = Y[:500]
+    x2 = X[:500]
+    y2 = Y[:500]
+
+    # xs = np.array_split(xM,2)
+    # ys = np.array_split(yM,2)
+
+
+    # Y =ys[0]
+    # X =xs[0]
 
     num_samples = 500
     num_features = 45
 
-    samples = np.matrix(np.random.normal(size=num_samples * num_features).reshape(num_samples, num_features))
-    labels = 2 * (samples.sum(axis=1) > 0) - 1.0
+    # samples = np.matrix(np.random.normal(size=num_samples * num_features).reshape(num_samples, num_features))
+    # labels = 2 * (samples.sum(axis=1) > 0) - 1.0
 
-    t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
+    # t = svm(samples,labels,kernels.linear())
 
-    print(samples[0][0])
-    s = t.predict(samples[0][0])
-    print(s)
-    print(labels[0][0])
-    #t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
-    #print(t.predict(X[0]))
+
+    # s = t.predict(samples[1][0])
+    # print(s)
+    # print(labels[1][0])
+    t = svm(x1,parser.adjustLabels(y1,1),kernels.rbf(2))
+    #print(parser.adjustLabels(y1,1))
+
+    #w = t.getWeights()
+    #for i in w:
+    #    print(i)
+
+    percentage=0
+    for i in range(500):
+        percentage += (t.predict(x2[i])>0 and y2[i]==1) or (t.predict(x2[i])<0 and y2[i]!=1)
+        #print(t.predict(x2[i],t.getB()))
+        #print(y2[i])
+    print(percentage/500)
 
 
 
@@ -139,12 +168,14 @@ if __name__ == '__main__':
     if(len(sys.argv) >= 2 and sys.argv[1] == '1'):
         svms = trainBootstrap()
         predictBootstrap(svms)
-    if(len(sys.argv) >= 2 and sys.argv[1] == '2'):
+    elif(len(sys.argv) >= 2 and sys.argv[1] == '2'):
         svms = trainAndStoreSvms("trainedSVMData/test")
         predictBootstrap(svms)
-    if(len(sys.argv) >= 2 and sys.argv[1] == '3'):
+    elif(len(sys.argv) >= 2 and sys.argv[1] == '3'):
         svms = loadSvmsFromFile("trainedSVMData/test", 8, 7)
         predictBootstrap(svms)
+    else:
+        main()
 
 
 

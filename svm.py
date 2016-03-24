@@ -2,12 +2,13 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 import cvxopt
 import parser
+import multiplyer
 
 class svm():
     def __init__(self, X,Y,Kernel, train=True):
         self._x = X
         self._y = Y
-        self._c = .01
+        self._c = 10
         self._b = None
         self._supportVectors = None
         self._supportLabels = None
@@ -18,17 +19,20 @@ class svm():
 
     def train(self):
         A = self._compute_multipliers(self._x,self._y)
-
+        # K = self._gramMatrix()
+        # A = multiplyer.CalculateLagrangeMultipliers(self._y,K,self._c)
         #cool trick I got from tullo with numpy arrays, I'm definitly useing
         # this alot
         #It returns true for all indices greater than 0 and false for less
         #if a=0 for an element that means it is not a support vector
-        supportIndices = A > 0
+
+        supportIndexes = A > self._c / 10
 
         #now we can use that to use only the vectors that we need
-        self._supportVectors = self._x[supportIndices]
-        self._supportWeights = A[supportIndices]
-        self._supportLabels = self._y[supportIndices]
+        self._supportVectors = self._x[supportIndexes]
+        self._supportWeights = A[supportIndexes]
+        self._supportLables = self._y[supportIndexes]
+        print(len(self._supportLables))
 
         #eqn 7.18
         #using zip trick for the labes and vectors from the tullo blog reference [3]
@@ -38,13 +42,21 @@ class svm():
         # print(test)
         # exit()
 
-        self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLabels,self._supportVectors)])
+        self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)])
+        
+        #self._b = 0
 
+        #n = 0
+        #self._b = 0
+        #for i,tn in enumerate(self._supportLables):
+        #    if self._supportWeights[i] < self._c:
+        #        n = n+1
+        #        self._b += tn - self.predict(xn,0)
+        #self._b /= n
 
-    def _compute_multipliers(self, X, p):
+    def _compute_multipliers(self, X, y):
         n_samples, n_features = X.shape
-        y = [i*1.0 for i in p]
-        y = np.ravel(y)
+
         K = self._gramMatrix()
         # Solves
         # min 1/2 x^T P x + q^T x
@@ -68,10 +80,10 @@ class svm():
         h = cvxopt.matrix(np.vstack((h_std, h_slack)))
 
         A = cvxopt.matrix(y, (1, n_samples))
-
         b = cvxopt.matrix(0.0)
 
         solution = cvxopt.solvers.qp(P, q, G, h, A, b)
+        
         # Lagrange multipliers
         return np.ravel(solution['x'])
 
@@ -107,7 +119,10 @@ class svm():
         return K
 
     def getB(self):
-        np.mean()
+        return self._b;
+
+    def getWeights(self):
+        return self._supportWeights
 
     # def _getP():
 
