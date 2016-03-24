@@ -30,7 +30,7 @@ Handwriting recognition allows for handwritten documents to be stored in electro
 
 \section{Introduction}
 
-\IEEEPARstart{O}{ur} introduction paragraph goes here. This is just some sample text to fill up the space.
+\IEEEPARstart{T}{he} rising availability of technology significantly impacts on the way we interact with everything around us, including an increasing consumption of data. Handwriting recognition provides an extremely efficient method for reading data from the physical world. The challenge with implementing a real world handwriting recognition system results from the large variances between how each letter is written. This requires finding a way to correctly classify each of these letters in order to interpret their meaning. In this implementation, multiple 2-class support vector machines are used to accomplish these classifications. To adapt a 2-class SVM to handle a multi-class problem, we have implemented a solution that trains a specific SVM for each class using an all-or-none method. Each SVM will assign the selected class a label of 1 and all other samples a label of -1. Using many bootstrap samples for each of the different classes, we take a mean of the prediction values for each set of bootstrap sample and choose the highest mean value for the selected classification.
 
 %\hfill mds
 
