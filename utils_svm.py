@@ -167,9 +167,13 @@ def loadSvmsFromFile(fname, numClasses, numIterations):
     for i in range(0, numClasses):
         classSvms = []
         for j in range(0, numIterations):
-            currSvm = svm(None, None, kernels.rbf(2), False)
-            classSvms.append(currSvm)
+            currSvm = svm(None, None, 4, kernels.rbf(1), 0.1, False)
             currSvm.loadSelfFromFiles(fname, i, j)
+            # print (currSvm._supportLabels)
+            # print (currSvm._supportWeights)
+            # print (currSvm._supportVectors)
+
+            classSvms.append(currSvm)
         svms.append(classSvms)
     return svms
 

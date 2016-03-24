@@ -31,14 +31,14 @@ class svm():
         #now we can use that to use only the vectors that we need
         self._supportVectors = self._x[supportIndexes]
         self._supportWeights = A[supportIndexes]
-        self._supportLables = self._y[supportIndexes]
-        print("Support Vectors:",len(self._supportLables))
+        self._supportLabels = self._y[supportIndexes]
+        print("Support Vectors:",len(self._supportLabels))
 
 
-        if len(self._supportLables) == 0:
+        if len(self._supportLabels) == 0:
             self._b = 0
         else:
-            self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)])
+            self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLabels,self._supportVectors)])
 
 
 
@@ -80,11 +80,11 @@ class svm():
 
         summation = b;
 
-        if len(self._supportLables) == 0:
+        if len(self._supportLabels) == 0:
             return summation
 
         for n, x_n in enumerate(self._supportVectors):
-            summation += self._supportWeights[n] * self._supportLables[n] * self._kernel(x, x_n)
+            summation += self._supportWeights[n] * self._supportLabels[n] * self._kernel(x, x_n)
         return summation.item()
 
     # def langranging_multipliers():

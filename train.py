@@ -2,7 +2,7 @@ import utils_svm
 import sys
 
 def train(inputfileX, inputfileY):
-    utils_svm.trainAndStoreSvms(inputfileX, inputfileY, "test")
+    utils_svm.trainAndStoreSvms(inputfileX, inputfileY, "workPlease")
 
 
 if __name__ == '__main__':
