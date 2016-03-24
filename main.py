@@ -100,27 +100,20 @@ def predictBootstrap(svms):
     for i, point in enumerate(X):
         print(point)
         # for each classifier j
-        success = False
         count = []
         for j, classifier in enumerate(classifiers):
             count.append(0)
-            print("Class ", j)
             if(not success):
                 # send to each svm to be tested for commitee vote
                 for k in range(0,NUM_COMMITTEES):
-                    print(" SVM ", k)
                     # update count for each commitee vote in this class
                     print(svms[j][k].predict(point))
                     if(np.sign(svms[j][k].predict(point)) > 0):
                         count[j] += 1
-                # check if count is high enough to accept as answer
-                # if(count >= 4):
-                #     print("Point real: %d\nPoint prediction: %d", Y[i], j)
-                #     success = True
-                #     # break
         print("Count array for each classifier: ", count)
-        if(not success):
-            print("Point unclassified.\nPoint real: %d", Y[i])
+        # Get classification of point
+        
+
 
 def trainAndStoreSvms(fname):
     svms = trainBootstrap()
@@ -152,8 +145,7 @@ if __name__ == '__main__':
     if(len(sys.argv) >= 2 and sys.argv[1] == '3'):
         svms = loadSvmsFromFile("trainedSVMData/test", 8, 7)
         predictBootstrap(svms)
-    # else:
-        # main()
+
 
 
 
