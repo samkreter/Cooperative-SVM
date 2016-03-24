@@ -30,7 +30,14 @@ Handwriting recognition allows for handwritten documents to be stored in electro
 
 \section{Introduction}
 
-\IEEEPARstart{T}{he} rising availability of technology significantly impacts on the way we interact with everything around us, including an increasing consumption of data. Handwriting recognition provides an extremely efficient method for reading data from the physical world. The challenge with implementing a real world handwriting recognition system results from the large variances between how each letter is written. This requires finding a way to correctly classify each of these letters in order to interpret their meaning. In this implementation, multiple 2-class support vector machines are used to accomplish these classifications. To adapt a 2-class SVM to handle a multi-class problem, we have implemented a solution that trains a specific SVM for each class using an all-or-none method. Each SVM will assign the selected class a label of 1 and all other samples a label of -1. Using many bootstrap samples for each of the different classes, we take a mean of the prediction values for each set of bootstrap sample and choose the highest mean value for the selected classification.
+\IEEEPARstart{T}{he} rising availability of technology significantly impacts on the way we interact with everything around us, including an increasing consumption of data. Handwriting recognition provides an extremely efficient method for reading data from the physical world. The challenge with implementing a real world handwriting recognition system results from the large variances between how each letter is written. This requires finding a way to correctly classify each of these letters in order to interpret their meaning. In this implementation, multiple 2-class support vector machines are used to accomplish these classifications. To adapt a 2-class SVM to handle a multi-class problem, we have implemented a solution that trains a specific SVM for each class using an all-or-none method. Each SVM will assign the selected class a label of 1 and all other samples a label of -1. Using many bootstrap samples for each of the different classes, we take a mean of the prediction values for each set of bootstrap sample and choose the highest mean value for the selected classification.\\
+
+Reference \cite{BishopBook} clearly showed the fundamental equations and a good understanding of the mechanics behind implementing the SVM.\\
+
+Reference \cite{TullochSVMpy} gave an overview of a SVM implementation which gave great insight into first step to understanding the problem of creating a full SVM implementation.\\
+
+Reference \cite{QuadraticCVXOPT} was a long introduction to understanding quadratic programming problems as well as forming the constraints to fit into cvxopt solver to find the final values.\\
+
 
 %\hfill mds
 
@@ -186,10 +193,18 @@ Handwriting recognition allows for handwritten documents to be stored in electro
 
 \section{Experiments}
 
-After the SVMs were all trained using the bootstrapping method, we used a committee-waterfall approach to determine the best class for each test point.  In order to do this, the SVMs are grouped by classifier, with 7 independently trained SVMs per each of the 8 classifiers.  Each test point is run through each of the 7*8=56 SVMs.
+In our first run we used an all-or-nothing pipelining approach for the classification.  With this approach, we trained a svm for each class divider, using class vs. all points not in that class. The goal of this approach was to get a quick and rough estimation of the accuracy of our trained svms.  To test this approach, we stopped running a point through the class dividers when a match was returned.  This approach is not ideal, since it could return many false negatives, especially if letters are similar, such as ‘h’ and ‘k’.  This approach also does not give any indication of a confidence interval on any given test point.\\
+
+In our next training/testing approach,the trained using the bootstrapping approach. After the SVMs were all trained using the bootstrapping method, we used a committee approach to determine the best class for each test point.  The goal of this was to gain a good confidence interval on test points.  In order to do this, the SVMs were grouped by classifier, with a set number of  independently trained SVMs per each of the 8 classifiers.  Each test point is run through each of the set number of runs*8=56 SVMs.  The bootstrapping method provided us with two ways to choose an appropriate classifier.  The first approach was to simply take the arithmetic mean of each of the committee results for the classes.  The class with the highest mean (above a set certainty threshold) is chosen.  The certainty threshold ensures that if all committee results are low, the point should be determined unclassified. In the end we found that for our case the bootstrapping actually made the final percentage worse than when training one time with a larger set of the data.\\
+
+In the initial experiments, the SVMs were initially trained on an easier, adjustable data set composed of two populations of Gaussian distributed data in two dimensions. The separation between the two populations and the standard deviation of the Gaussian noise was adjustable, thus making the separability variable. These datasets allowed us to slowly train our SVM on increasingly complex data sets.\\
+
+The next bootstrapping testing method classified points based on the mean of the committee votes, weighted by their standard deviations.  To do this, we found the standard deviation of the results, and subtracted a standard deviation from the arithmetic mean.   This helps to lower confidence intervals in situations where a committee’s individual results for a point vary more, and increase confidence when variance is low for a given point. The class with the highest value is once again chosen, given it is below the certainty threshold.\\
+
+Once this model of the SVM was implemented, we began to optimize our parameters including the tradeoff parameter C, the minimum value for a Lagrange multiplier to act as a support vector, and the variance of the radial basis function used as our kernel. We found that increasing the tradeoff parameter C too much resulted in a slow drop off of our classification percentage, whereas making it too small, caused a sudden dropoff in classification accuracy. The C tradeoff also had a significant impact on the number of support vectors identified; as C got smaller we saw a greater number of support vectors being used in the calculations increased.\\
 
 \section{Conclusion}
-Conclusion paragraph text goes here.
+After implementing our SVM and optimizing parameters, we were able to consistently achieve classification rates between 65\% and 74\% on randomly chosen test data. In the process of developing this SVM we found that we often wished we could change global parameters like C and the variance of the radial basis function depending on the class of the data; we found that some letters like $k$ were misclassified much more often than others. After all of the experiments we found that having parameters C = 4, 1 for the sigma of the RBF, 75\% of the total dataset and 3 bootstraps. In the end we would have liked to implement a tree style approach that would better classify closely related letters such as “i” and “j” by having a SVM trained on the two letters specifically instead of just 1 vs the rest.
 
 
 \ifCLASSOPTIONcaptionsoff
@@ -206,12 +221,6 @@ Conclusion paragraph text goes here.
 
 \bibitem{QuadraticCVXOPT}
   \emph{Quadratic Programming With Python And CVXOPT. N.p., 2016. Web. 24 Mar. 2016.}
-
-\bibitem{EffectiveNumpy}
-  \emph{How To Calculate A Gaussian Kernel Effectively In Numpy.} Stats.stackexchange.com. N.p., 2016. Web. 24 Mar. 2016.
-
-\bibitem{Pdist}
-  \emph{Scipy.Spatial.Distance.Pdist — Scipy V0.17.0 Reference Guide.} Docs.scipy.org. N.p., 2016. Web. 24 Mar. 2016.
 
 \end{thebibliography}
 
