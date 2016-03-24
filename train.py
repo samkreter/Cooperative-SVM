@@ -1,4 +1,4 @@
-import utils
+import utils_svm
 import sys
 
 def train(inputfileX, inputfileY):
