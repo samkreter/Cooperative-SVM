@@ -21,40 +21,28 @@
 The abstract goes here.
 \end{abstract}
 
-\begin{IEEEkeywords}
-IEEE, IEEEtran, journal, \LaTeX, paper, template.
-\end{IEEEkeywords}
-
 \IEEEpeerreviewmaketitle
 
 \section{Introduction}
 
-\IEEEPARstart{T}{his} demo file is intended to serve as a ``starter file''
-for IEEE journal papers produced under \LaTeX\ using
-IEEEtran.cls version 1.8b and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
+\IEEEPARstart{O}{ur} introduction paragraph goes here. This is just some sample text to fill up the space.
 
-\hfill mds
+%\hfill mds
 
-\hfill August 26, 2015
+%\hfill August 26, 2015
 
 \subsection{Subsection \#1}
 Subsection text here. Sample text and stuff goes here.
 
 \section{Implementation}
+Implementation paragraph text goes here.
 
 \section{Experiments}
 
 After the SVMs were all trained using the bootstrapping method, we used a committee-waterfall approach to determine the best class for each test point.  In order to do this, the SVMs are grouped by classifier, with 7 independently trained SVMs per each of the 8 classifiers.  Each test point is run through each of the 7*8=56 SVMs.  When committee results are gathered, if the point has less than 4 committee votes for each classifier, it is unclassified.  If the point has 4 or more votes from just one classifier group, it is classified to that group. If the point has 4 or more votes from multiple classification committees, it is classified to the committee with the most votes, or in the event of a tie, to a random choice between the tie.
 
 \section{Conclusion}
-
-\section{References}
-
-\appendices
-Appendix one text goes here.
+Conclusion paragraph text goes here.
 
 \section*{Acknowledgment}
 
@@ -79,17 +67,5 @@ Christina would like to thank her mom for her support.
   \emph{Scipy.Spatial.Distance.Pdist — Scipy V0.17.0 Reference Guide.} Docs.scipy.org. N.p., 2016. Web. 24 Mar. 2016.
 
 \end{thebibliography}
-
-\begin{IEEEbiography}{Michael Shell}
-Biography text here.
-\end{IEEEbiography}
-
-\begin{IEEEbiographynophoto}{John Doe}
-Biography text here.
-\end{IEEEbiographynophoto}
-
-\begin{IEEEbiographynophoto}{Jane Doe}
-Biography text here.
-\end{IEEEbiographynophoto}
 
 \end{document}
