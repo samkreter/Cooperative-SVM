@@ -23,12 +23,12 @@ def trainIdeal(inputfileX, inputfileY):
     (Xshuf,Yshuf) = randSubset(X,Y,1656)
 
     # PARAMETERS
-    trainingSampleSize = 1000
+    trainingSampleSize = 1256
     numBootstraps = 1
     bootstrapSampleSize = math.floor(0.7 * trainingSampleSize)
-    testSize = 500
+    testSize = 400
     minConfidence = 0
-    C = 1
+    C = 4
     minSupportVector = 0.1
     RBF_sigma = 1
     kernel = kernels.rbf(RBF_sigma)
