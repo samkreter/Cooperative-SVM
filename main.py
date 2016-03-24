@@ -98,24 +98,24 @@ def predictBootstrap(svms):
         print(point)
         # for each classifier j
         success = False
+        count = []
         for j, classifier in enumerate(classifiers):
+            count.append(0)
             print("Class ", j)
             if(not success):
-                count = 0
                 # send to each svm to be tested for commitee vote
                 for k in range(0,7):
                     print(" SVM ", k)
                     # update count for each commitee vote in this class
                     print(svms[j][k].predict(point))
                     if(np.sign(svms[j][k].predict(point)) > 0):
-                        count += 1
+                        count[j] += 1
                 # check if count is high enough to accept as answer
-                if(count >= 4):
-                    print("Point real: %d\nPoint prediction: %d", Y[i], j)
-                    success = True
-                    break
-            else:
-                break
+                # if(count >= 4):
+                #     print("Point real: %d\nPoint prediction: %d", Y[i], j)
+                #     success = True
+                #     # break
+        print("Count array for each classifier: ", count)
         if(not success):
             print("Point unclassified.\nPoint real: %d", Y[i])
 
@@ -126,13 +126,31 @@ def predictBootstrap(svms):
 #     else:
 #         return False
 
+def trainAndStoreSvms():
+    svms = trainBootstrap()
+    for svmSet in svms:
+        for svm in svmSet:
+            svm.writeSelfToFile("test")
+
+
+def loadSvmsFromFile():
+    
 
 if __name__ == '__main__':
     if(len(sys.argv) >= 2 and sys.argv[1] == '1'):
         svms = trainBootstrap()
         predictBootstrap(svms)
+    # 
+    else if(len(sys.argv) >= 2 and sys.argv[1] == '2'):
+        trainAndStoreSvms()
+    else if(len(sys.argv) >= 2 and sys.argv[1] == '3'):
+        trainAndStoreSvms()
+
     else:
         main()
+
+
+
 
 
 

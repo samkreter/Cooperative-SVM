@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 import cvxopt
+import parser
 
 class svm():
     def __init__(self, X,Y,Kernel):
@@ -114,3 +115,34 @@ class svm():
 
     # # Stores in self._a to be used in predict function
     # def _getA():
+
+    # Passfilename without extension to be appended for each data piece
+    def writeSelfToFile(filename, classifier, iteration):
+        fname = "{}_supportVectors_{}_{}.npy".format(filename, classifier, iteration)
+        parser.write_numpy_array_to_txt(fname, self._supportVectors)
+
+        fname = "{}_supportWeights_{}_{}.npy".format(filename, classifier, iteration)
+        parser.write_numpy_array_to_txt(fname, self._supportWeights)
+
+        fname = "{}_supportLabels_{}_{}.npy".format(filename, classifier, iteration)
+        parser.write_numpy_array_to_txt(fname, self._supportLabels)
+
+        fname = "{}_kernel_{}_{}.npy".format(filename, classifier, iteration)
+        parser.write_numpy_array_to_txt(fname, self._kernel)
+
+        fname = "{}_b_{}_{}.npy".format(filename, classifier, iteration)
+        parser.write_numpy_array_to_txt(fname, self._b)
+
+    
+
+    def loadSelfFromFiles(vectorsFname, weightsFname, labelsFname, kernelFname, bFname):
+        self._supportVectors = parser.getNumpyArray(vectorsFname)
+        self._supportWeights = parser.getNumpyArray(weightsFname)
+        self._supportLabels  = parser.getNumpyArray(labelsFname)
+        self._kernel         = parser.getNumpyArray(kernelFname)
+        self._b              = parser.getNumpyArray(bFname)
+
+
+
+
+
