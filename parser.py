@@ -6,17 +6,22 @@ def getNumpyArray(filename):
     return np.load(filename)
 
 def write_numpy_array_to_txt(filename, newFileName):
+    # print(filename)
+    # print
 	file = open(newFileName, "w")
 	npArray = getNumpyArray(filename)
 	for row in npArray:
-		file.write( "\n" + np.array_str(row) + ",")
+		file.write(np.array_str(row) + ",\n")
 	file.close()
 
-def adjustLabels(originalLabels,PrimaryClass):
+def write_numpy_array_to_npy(newFileName, npArray):
+    np.save(newFileName, npArray)
+
+def adjustLabels(originalLabels, PrimaryClass):
     newLabels = []
     for label in originalLabels:
         if label == PrimaryClass:
-            newLabels.append([1])
+            newLabels.append([1*1.0])
         else:
-            newLabels.append([-1])
-    return newLabels
+            newLabels.append([-1*1.0])
+    return np.array(newLabels)

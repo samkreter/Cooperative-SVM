@@ -11,3 +11,7 @@ def linear():
     def k(x, y):
         return np.inner(x,y)
     return k
+
+def gaussian(sigma):
+    return lambda x, y: \
+        np.exp(-np.sqrt(la.norm(x-y) ** 2 / (2 * sigma ** 2)))
