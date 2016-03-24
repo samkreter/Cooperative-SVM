@@ -181,14 +181,11 @@ The abstract goes here.
 
 \section{Experiments}
 
-After the SVMs were all trained using the bootstrapping method, we used a committee-waterfall approach to determine the best class for each test point.  In order to do this, the SVMs are grouped by classifier, with 7 independently trained SVMs per each of the 8 classifiers.  Each test point is run through each of the 7*8=56 SVMs.  When committee results are gathered, if the point has less than 4 committee votes for each classifier, it is unclassified.  If the point has 4 or more votes from just one classifier group, it is classified to that group. If the point has 4 or more votes from multiple classification committees, it is classified to the committee with the most votes, or in the event of a tie, to a random choice between the tie.
+After the SVMs were all trained using the bootstrapping method, we used a committee-waterfall approach to determine the best class for each test point.  In order to do this, the SVMs are grouped by classifier, with 7 independently trained SVMs per each of the 8 classifiers.  Each test point is run through each of the 7*8=56 SVMs.
 
 \section{Conclusion}
 Conclusion paragraph text goes here.
 
-\section*{Acknowledgment}
-
-Christina would like to thank her mom for her support.
 
 \ifCLASSOPTIONcaptionsoff
   \newpage

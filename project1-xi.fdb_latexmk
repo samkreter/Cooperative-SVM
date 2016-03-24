@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1458805570 "project1-xi.tex" "project1-xi.pdf" "project1-xi" 1458805571
+["pdflatex"] 1458807067 "project1-xi.tex" "project1-xi.pdf" "project1-xi" 1458807067
   "/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2015/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2015/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1136768653 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -38,9 +38,9 @@
   "/usr/local/texlive/2015/texmf-var/web2c/pdftex/pdflatex.fmt" 1432479681 3849859 39a7d258195bde2394e244961601fbc5 ""
   "/usr/local/texlive/2015/texmf.cnf" 1432479636 577 0d611272082f3cdb8e80e09a3c69cf07 ""
   "IEEEtran.cls" 1458802525 281957 5b2e4fa15b0f7eabb840ebf67df4c0f7 ""
-  "project1-xi.aux" 1458805570 1576 d95e6c9cdcb02b7a4e20d69c63bf1801 ""
-  "project1-xi.tex" 1458805567 9878 c096a299c1381026beaa2ace0f265ca9 ""
+  "project1-xi.aux" 1458807067 1576 d95e6c9cdcb02b7a4e20d69c63bf1801 ""
+  "project1-xi.tex" 1458807028 9383 a68060fa08a6feb49efc461b26e687fa ""
   (generated)
-  "project1-xi.log"
-  "project1-xi.pdf"
   "project1-xi.aux"
+  "project1-xi.pdf"
+  "project1-xi.log"
