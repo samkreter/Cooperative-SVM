@@ -2,6 +2,6 @@ __pycache__/
 *.pyc
 project1-xi.aux
 project1-xi.log
-
+project1-xi.fls
 project1-xi.fdb_latexmk
 project1-xi.synctex.gz
