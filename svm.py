@@ -117,25 +117,25 @@ class svm():
     # def _getA():
 
     # Passfilename without extension to be appended for each data piece
-    def writeSelfToFile(filename, classifier, iteration):
-        fname = "{}_supportVectors_{}_{}.npy".format(filename, classifier, iteration)
-        parser.write_numpy_array_to_txt(fname, self._supportVectors)
+    def writeSelfToFile(self, filename, classifier, iteration):
+        fname = ""+filename + "_supportVectors_"+str(classifier)+"_"+str(iteration)+".npy"
+        parser.write_numpy_array_to_txt2(fname, self._supportVectors)
 
         fname = "{}_supportWeights_{}_{}.npy".format(filename, classifier, iteration)
-        parser.write_numpy_array_to_txt(fname, self._supportWeights)
+        parser.write_numpy_array_to_txt2(fname, self._supportWeights)
 
         fname = "{}_supportLabels_{}_{}.npy".format(filename, classifier, iteration)
-        parser.write_numpy_array_to_txt(fname, self._supportLabels)
+        parser.write_numpy_array_to_txt2(fname, self._supportLabels)
 
-        fname = "{}_kernel_{}_{}.npy".format(filename, classifier, iteration)
-        parser.write_numpy_array_to_txt(fname, self._kernel)
+        # fname = "{}_kernel_{}_{}.npy".format(filename, classifier, iteration)
+        # parser.write_numpy_array_to_txt2(fname, self._kernel)
 
         fname = "{}_b_{}_{}.npy".format(filename, classifier, iteration)
-        parser.write_numpy_array_to_txt(fname, self._b)
+        parser.write_numpy_array_to_txt2(fname, [self._b])
 
     
 
-    def loadSelfFromFiles(vectorsFname, weightsFname, labelsFname, kernelFname, bFname):
+    def loadSelfFromFiles(self, vectorsFname, weightsFname, labelsFname, kernelFname, bFname):
         self._supportVectors = parser.getNumpyArray(vectorsFname)
         self._supportWeights = parser.getNumpyArray(weightsFname)
         self._supportLabels  = parser.getNumpyArray(labelsFname)

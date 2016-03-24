@@ -6,11 +6,19 @@ def getNumpyArray(filename):
     return np.load(filename)
 
 def write_numpy_array_to_txt(filename, newFileName):
+    # print(filename)
+    # print
 	file = open(newFileName, "w")
 	npArray = getNumpyArray(filename)
 	for row in npArray:
-		file.write( "\n" + np.array_str(row) + ",")
+		file.write(np.array_str(row) + ",\n")
 	file.close()
+
+def write_numpy_array_to_txt2(newFileName, npArray):
+    file = open(newFileName, "w")
+    for row in npArray:
+        file.write(np.array_str(row) + ",\n")
+    file.close()
 
 def adjustLabels(originalLabels, PrimaryClass):
     newLabels = []

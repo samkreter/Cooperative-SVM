@@ -6,6 +6,8 @@ import parser
 import kernels
 import random
 
+NUM_COMMITTEES = 7
+
 
 #yall know what this bad boy does
 def main():
@@ -64,7 +66,7 @@ def trainBootstrap():
         newY = parser.adjustLabels(Y, currClass)
 
         # bootstrap each group 7 times.  Use 500 each time
-        for j in range(0, 7):
+        for j in range(0, NUM_COMMITTEES):
             print("Training class %d.  In iteration %d", currClass, j)
             # shuffle arrays together to keep points with classifiers correct 
             combined = list(zip(X, newY))
@@ -126,26 +128,27 @@ def predictBootstrap(svms):
 #     else:
 #         return False
 
-def trainAndStoreSvms():
+def trainAndStoreSvms(fname):
     svms = trainBootstrap()
-    for svmSet in svms:
-        for svm in svmSet:
-            svm.writeSelfToFile("test")
+    # classifier
+    for i, svmSet in enumerate(svms):
+        # iteration
+        for j, svm in enumerate(svmSet):
+            svm.writeSelfToFile(fname, i, j)
 
 
-def loadSvmsFromFile():
-    
+# def loadSvmsFromFile():
+
 
 if __name__ == '__main__':
     if(len(sys.argv) >= 2 and sys.argv[1] == '1'):
         svms = trainBootstrap()
         predictBootstrap(svms)
     # 
-    else if(len(sys.argv) >= 2 and sys.argv[1] == '2'):
-        trainAndStoreSvms()
-    else if(len(sys.argv) >= 2 and sys.argv[1] == '3'):
-        trainAndStoreSvms()
-
+    if(len(sys.argv) >= 2 and sys.argv[1] == '2'):
+        trainAndStoreSvms("trainedSVMData/test")
+    # if(len(sys.argv) >= 2 and sys.argv[1] == '3'):
+    #     trainAndStoreSvms("test")
     else:
         main()
 
