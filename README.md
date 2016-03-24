@@ -1,10 +1,9 @@
-#Doing What We Do SVM
+#Implementing an SVM for Handwriting Recognition
 
-##References
-[1] [Quadratic Programming Solver](https://courses.csail.mit.edu/6.867/wiki/images/a/a7/Qp-cvxopt.pdf)
+##Running the code with default settings
 
-[2] [RBF SciPy Kernel Speed Up](http://stats.stackexchange.com/questions/15798/how-to-calculate-a-gaussian-kernel-effectively-in-numpy)
+This section will show how to run the code with the present parameters.
 
-[3] [Basic Understanding of SVM](http://tullo.ch/articles/svm-py/)
+##Parameters
 
-[4] [SciPy.pdist function understanding](http://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html#scipy.spatial.distance.pdist)
+This section will explain the parameters that can be changed and what they do.
