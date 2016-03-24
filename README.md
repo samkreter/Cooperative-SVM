@@ -1,8 +1,20 @@
 #Implementing an SVM for Handwriting Recognition
 
+##Quick Start
+
+Download the zip file containing the SVM files. Use the train.py function to train and the test.py function to test.
+
+##Installation
+
+###Python Dependencies
+
+numpy >= 1.10.4
+
+cvxopt >= 1.1.8
+
 ##Running the code with default settings
 
-This section will show how to run the code with the present parameters.
+Put the input data into the train function in train.py and then use the test function in test.py to test the data.
 
 ##Parameters
 
