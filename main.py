@@ -12,10 +12,7 @@ import matplotlib.pyplot as plt
 from randData import twoClasses
 from subset import randSubset
 
-<<<<<<< HEAD
-# yall know what this bad boy does
-=======
->>>>>>> bootstrapping
+
 def main():
 
     X = parser.getNumpyArray("TrainX.npy")
