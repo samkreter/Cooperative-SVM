@@ -35,6 +35,10 @@ The abstract goes here.
 Subsection text here. Sample text and stuff goes here.
 
 \section{Implementation}
+    Our SVM implementation first used a parser class to transform the input data.  The parser is able to load and write numpy arrays of the testing and label data.  To transform the label sets for training individual class dividers, the parser sets all labels that are of the current class being trained to 1, and to -1 for the rest of the classes.  Next, we created a set of kernel functions to be passed into the svm instance dynamically, depending on the particular kernel needed.  We packaged the training and prediction functionalities into instances of svm classes, which additionally store trained variables such as the support vectors and the bias.  This allowed us to train and store multiple svms.\\
+
+    The SVM class is instantiated with the pre-processed sample (feature) vectors, their corresponding labels (1 or -1), the appropriate kernel function, and its necessary parameters (such as sigma for an RBF function).  In the training function, the support vectors are computed by finding the Gram Matrix, which stores all possible combinations of data points being passed into the kernel. We then solved the dual form found by lagrangian optimization (below) using cvxopt for our quadratic programming solver.
+
     \subsection{Dual Representation (from Eqn. 7.2 \cite{BishopBook})}
     \begin{equation}
     \mathbf{L} = \sum\limits_{N} a_n - \frac{1}{2} \sum\limits_{n} \sum\limits_{m} a_n a_m t_n t_m \mathbf{K}
@@ -128,15 +132,28 @@ Subsection text here. Sample text and stuff goes here.
     \end{equation}
 
     \subsection{Bias}
+    Solving for a gives us the indices for the support vectors. These along with the passed in data we now have the vectors, labels and weights of the support vectors we can use to find the bias and start computing predictions on the functions. The bias is simply computed from the form in equation \ref{eq:bias}.
+
     \begin{equation}
+    \label{eq:bias}
     b = \frac{1}{N_M} \sum\limits_{n \in M} (t_n - \sum\limits_{m \in S} a_m t_m k(\mathbf{x}_n, \mathbf{x}_m))
     \end{equation}
 
     \subsection{Prediction}
+    With this we have everything we need to implement the predict function from equation \ref{eq:prediction}.
+
     \begin{equation}
+    \label{eq:prediction}
     y(\mathbf{x}) = \sum\limits_{n = 1}^N a_n t_n k(\mathbf{x}, \mathbf{x}_n) + b
     \end{equation}
 
+    We also use this equation in finding the bias since they are essential the same equation if b is zero for equation \ref{eq:prediction}.\\
+
+    After calling the training function with the data set, labels and kernel function we can now call the predict function passing in a test point and will return some value between 1 and -1 which we can use to classify the point.\\
+
+    Next we tackled the problem of classifying many classes with an SVM that only supports two class classification. To do this we use two different methods for comparison. In both cases we use a 1 vs the rest model in a bootstrapping method. We train a matrix of SVMs where the columns denote SVMs trained on different classes and the rows denote SVMs of the same class but different subsets of the training data. In the first case we take the mean of each set of SVMs for a particular class. The class with the highest overall mean will be used for the final label class. In the second case, we choose the classes with the highest results and find the variances of those results. The class with the least variance is chosen for the final label since the smaller variance shows a stronger confidence in the result.\\
+
+    Finally we have implemented pickling function to write and load the trained SVMs to a file in order to persist the state of the trained SVMs instead of having to train the SVMs on the same training data over and over again. This can be very beneficial for using larger bootstrapping samples or having more classes where it would take a large amount of time to train.\\
 
 
 
