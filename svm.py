@@ -7,7 +7,7 @@ class svm():
     def __init__(self, X,Y,Kernel):
         self._x = X
         self._y = Y
-        self._c = .01
+        self._c = 10
         self._b = None
         self._supportVectors = None
         self._supportLables = None
@@ -23,12 +23,13 @@ class svm():
         # this alot
         #It returns true for all indeces greater than 0 and false for less
         #if a=0 for an element that means it is not a support vector
-        supportIndexes = A > 0
+        supportIndexes = A > self._c / 10
 
         #now we can use that to use only the vectors that we need
         self._supportVectors = self._x[supportIndexes]
         self._supportWeights = A[supportIndexes]
         self._supportLables = self._y[supportIndexes]
+        print(len(self._supportLables))
 
         #eqn 7.18
         #using zip trick for the labes and vectors from the tullo blog reference [3]
@@ -39,7 +40,16 @@ class svm():
         # exit()
 
         self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)])
+        
+        #self._b = 0
 
+        #n = 0
+        #self._b = 0
+        #for i,tn in enumerate(self._supportLables):
+        #    if self._supportWeights[i] < self._c:
+        #        n = n+1
+        #        self._b += tn - self.predict(xn,0)
+        #self._b /= n
 
     def _compute_multipliers(self, X, y):
         n_samples, n_features = X.shape
@@ -106,7 +116,10 @@ class svm():
         return K
 
     def getB(self):
-        np.mean()
+        return self._b;
+
+    def getWeights(self):
+        return self._supportWeights
 
     # def _getP():
 

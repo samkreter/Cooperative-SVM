@@ -4,18 +4,22 @@ import numpy as np
 from svm import svm
 import parser
 import kernels
-
+import matplotlib.pyplot as plt
+from randData import twoClasses
 
 #yall know what this bad boy does
 def main():
 
     X = parser.getNumpyArray("TrainX.npy")
     Y = parser.getNumpyArray("TrainY.npy")
+    #(X,Y) = twoClasses(600,1,2)
+    #np.set_printoptions(threshold=np.nan)
+    #print(X)
 
     x1 = X[:500]
     y1 = Y[:500]
-    x2 = X[500:600]
-    y2 = Y[500:600]
+    x2 = X[:500]
+    y2 = Y[:500]
 
     # xs = np.array_split(xM,2)
     # ys = np.array_split(yM,2)
@@ -36,11 +40,19 @@ def main():
     # s = t.predict(samples[1][0])
     # print(s)
     # print(labels[1][0])
-    t = svm(x1,parser.adjustLabels(y1,1),kernels.gaussian(1))
+    t = svm(x1,parser.adjustLabels(y1,1),kernels.rbf(2))
+    #print(parser.adjustLabels(y1,1))
 
-    for i in range(20):
-        print(t.predict(x2[i]))
-        print(y2[i])
+    #w = t.getWeights()
+    #for i in w:
+    #    print(i)
+
+    percentage=0
+    for i in range(500):
+        percentage += (t.predict(x2[i])>0 and y2[i]==1) or (t.predict(x2[i])<0 and y2[i]!=1)
+        #print(t.predict(x2[i],t.getB()))
+        #print(y2[i])
+    print(percentage/500)
 
 
 # adjusts the y labels to 1 for curr and -1 for not current
