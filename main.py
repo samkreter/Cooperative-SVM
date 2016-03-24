@@ -13,10 +13,10 @@ from randData import twoClasses
 from subset import randSubset
 
 
-def main():
+def trainIdeal(inputfileX, inputfileY):
 
-    X = parser.getNumpyArray("TrainX.npy")
-    Y = parser.getNumpyArray("TrainY.npy")
+    X = parser.getNumpyArray(inputfileX)
+    Y = parser.getNumpyArray(inputfileY)
     #(X,Y) = twoClasses(600,1,2)
 
     # Shuffle the data
@@ -47,6 +47,8 @@ def main():
     # Test the SVMs
     percentage = randomTest(SVMs,x2,y2,testSize,minConfidence)
     print(percentage)
+
+    return SVMs
 
 
 def trainBootstrapSVMs(X,Y,kernel,samps,numCommitteeMembers,minSupportVector,C):
@@ -150,8 +152,8 @@ def randomTest(svms,X,Y,numTests,minConfidence):
     return correct / numTests
 
 
-def trainAndStoreSvms(fname):
-    svms = trainBootstrap()
+def trainAndStoreSvms(inputfileX, inputfileY, fname):
+    svms = trainIdeal(inputfileX, inputfileY)
     # classifier
     for i, svmSet in enumerate(svms):
         # iteration
@@ -182,7 +184,7 @@ if __name__ == '__main__':
         svms = loadSvmsFromFile("trainedSVMData/test", 8, 7)
         predictBootstrap(svms)
     else:
-        main()
+        trainIdeal()
 
 
 

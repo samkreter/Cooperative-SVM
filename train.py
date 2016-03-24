@@ -1,4 +1,4 @@
-from main import trainAndStoreSvms
+import main
 
-def train():
-    trainAndStoreSvms("trainedSVMData/test")
+def train(inputfileX, inputfileY):
+    trainAndStoreSvms(inputfileX, inputfileY, "test")
