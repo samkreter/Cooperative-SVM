@@ -127,6 +127,18 @@ Subsection text here. Sample text and stuff goes here.
     \end{IEEEeqnarraybox*}\right)
     \end{equation}
 
+    \subsection{Bias}
+    \begin{equation}
+    b = \frac{1}{N_M} \sum\limits_{n \in M} (t_n - \sum\limits_{m \in S} a_m t_m k(\mathbf{x}_n, \mathbf{x}_m))
+    \end{equation}
+
+    \subsection{Prediction}
+    \begin{equation}
+    y(\mathbf{x}) = \sum\limits_{n = 1}^N a_n t_n k(\mathbf{x}, \mathbf{x}_n) + b
+    \end{equation}
+
+
+
 
 
 \section{Experiments}
