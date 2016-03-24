@@ -85,7 +85,7 @@ def trainBootstrap():
         # bootstrap each group 7 times.  Use 500 each time
         for j in range(0, NUM_COMMITTEES):
             print("Training class %d.  In iteration %d", currClass, j)
-            # shuffle arrays together to keep points with classifiers correct 
+            # shuffle arrays together to keep points with classifiers correct
             combined = list(zip(X, newY))
             random.shuffle(combined)
             X[:], newY[:] = zip(*combined)
@@ -93,7 +93,7 @@ def trainBootstrap():
             # Get training groups: first 500 in group
             trainY = newY[:500]
             trainX = X[:500]
-            
+
             # train group
             classSvms.append(svm(trainX, parser.adjustLabels(trainY, currClass), kernels.linear()))
 
@@ -106,7 +106,7 @@ def predictBootstrap(svms):
     Y = parser.getNumpyArray("TrainY.npy")
     X = parser.getNumpyArray("TrainX.npy")
 
-    # shuffle arrays together to keep points with classifiers correct 
+    # shuffle arrays together to keep points with classifiers correct
     combined = list(zip(X, Y))
     random.shuffle(combined)
     X[:], Y[:] = zip(*combined)
@@ -127,7 +127,7 @@ def predictBootstrap(svms):
                     count[j] += 1
         print("Count array for each classifier: ", count)
         # Get classification of point
-        
+
 
 
 def trainAndStoreSvms(fname):
