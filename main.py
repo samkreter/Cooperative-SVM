@@ -6,7 +6,7 @@ import parser
 import kernels
 import random
 
-NUM_COMMITTEES = 7
+NUM_COMMITTEES = 2
 
 
 #yall know what this bad boy does
@@ -28,6 +28,7 @@ def main():
     print(labels[0][0])
     #t = svm(X,parser.adjustLabels(Y,1),kernels.linear())
     #print(t.predict(X[0]))
+
 
 
 # adjusts the y labels to 1 for curr and -1 for not current
@@ -106,7 +107,7 @@ def predictBootstrap(svms):
             print("Class ", j)
             if(not success):
                 # send to each svm to be tested for commitee vote
-                for k in range(0,7):
+                for k in range(0,NUM_COMMITTEES):
                     print(" SVM ", k)
                     # update count for each commitee vote in this class
                     print(svms[j][k].predict(point))
@@ -121,13 +122,6 @@ def predictBootstrap(svms):
         if(not success):
             print("Point unclassified.\nPoint real: %d", Y[i])
 
-
-# def predict(svm, point, realClass):
-#     if(svm.predict(point) == realClass):
-#         return True
-#     else:
-#         return False
-
 def trainAndStoreSvms(fname):
     svms = trainBootstrap()
     # classifier
@@ -135,22 +129,31 @@ def trainAndStoreSvms(fname):
         # iteration
         for j, svm in enumerate(svmSet):
             svm.writeSelfToFile(fname, i, j)
+    return svms
 
-
-# def loadSvmsFromFile():
-
+def loadSvmsFromFile(fname, numClasses, numIterations):
+    svms = [];
+    for i in range(0, numClasses):
+        classSvms = []
+        for j in range(0, numIterations):
+            currSvm = svm(None, None, kernels.rbf(2), False)
+            classSvms.append(currSvm)
+            currSvm.loadSelfFromFiles(fname, i, j)
+        svms.append(classSvms)
+    return svms
 
 if __name__ == '__main__':
     if(len(sys.argv) >= 2 and sys.argv[1] == '1'):
         svms = trainBootstrap()
         predictBootstrap(svms)
-    # 
     if(len(sys.argv) >= 2 and sys.argv[1] == '2'):
-        trainAndStoreSvms("trainedSVMData/test")
-    # if(len(sys.argv) >= 2 and sys.argv[1] == '3'):
-    #     trainAndStoreSvms("test")
-    else:
-        main()
+        svms = trainAndStoreSvms("trainedSVMData/test")
+        predictBootstrap(svms)
+    if(len(sys.argv) >= 2 and sys.argv[1] == '3'):
+        svms = loadSvmsFromFile("trainedSVMData/test", 8, 7)
+        predictBootstrap(svms)
+    # else:
+        # main()
 
 
 

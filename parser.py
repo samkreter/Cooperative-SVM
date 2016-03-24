@@ -14,11 +14,8 @@ def write_numpy_array_to_txt(filename, newFileName):
 		file.write(np.array_str(row) + ",\n")
 	file.close()
 
-def write_numpy_array_to_txt2(newFileName, npArray):
-    file = open(newFileName, "w")
-    for row in npArray:
-        file.write(np.array_str(row) + ",\n")
-    file.close()
+def write_numpy_array_to_npy(newFileName, npArray):
+    np.save(newFileName, npArray)
 
 def adjustLabels(originalLabels, PrimaryClass):
     newLabels = []

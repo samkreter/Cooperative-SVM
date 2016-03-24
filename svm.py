@@ -4,7 +4,7 @@ import cvxopt
 import parser
 
 class svm():
-    def __init__(self, X,Y,Kernel):
+    def __init__(self, X,Y,Kernel, train=True):
         self._x = X
         self._y = Y
         self._c = .01
@@ -13,7 +13,8 @@ class svm():
         self._supportLabels = None
         self._supportWeights = None
         self._kernel = Kernel
-        self.train()
+        if(train):
+            self.train()
 
     def train(self):
         A = self._compute_multipliers(self._x,self._y)
@@ -119,28 +120,34 @@ class svm():
     # Passfilename without extension to be appended for each data piece
     def writeSelfToFile(self, filename, classifier, iteration):
         fname = ""+filename + "_supportVectors_"+str(classifier)+"_"+str(iteration)+".npy"
-        parser.write_numpy_array_to_txt2(fname, self._supportVectors)
+        parser.write_numpy_array_to_npy(fname, self._supportVectors)
 
         fname = "{}_supportWeights_{}_{}.npy".format(filename, classifier, iteration)
-        parser.write_numpy_array_to_txt2(fname, self._supportWeights)
+        parser.write_numpy_array_to_npy(fname, self._supportWeights)
 
         fname = "{}_supportLabels_{}_{}.npy".format(filename, classifier, iteration)
-        parser.write_numpy_array_to_txt2(fname, self._supportLabels)
+        parser.write_numpy_array_to_npy(fname, self._supportLabels)
 
         # fname = "{}_kernel_{}_{}.npy".format(filename, classifier, iteration)
         # parser.write_numpy_array_to_txt2(fname, self._kernel)
 
         fname = "{}_b_{}_{}.npy".format(filename, classifier, iteration)
-        parser.write_numpy_array_to_txt2(fname, [self._b])
+        parser.write_numpy_array_to_npy(fname, [self._b])
 
     
 
-    def loadSelfFromFiles(self, vectorsFname, weightsFname, labelsFname, kernelFname, bFname):
-        self._supportVectors = parser.getNumpyArray(vectorsFname)
-        self._supportWeights = parser.getNumpyArray(weightsFname)
-        self._supportLabels  = parser.getNumpyArray(labelsFname)
-        self._kernel         = parser.getNumpyArray(kernelFname)
-        self._b              = parser.getNumpyArray(bFname)
+    def loadSelfFromFiles(self, filename, classifier, iteration):
+        fname = ""+filename + "_supportVectors_"+str(classifier)+"_"+str(iteration)+".npy"
+        self._supportVectors = parser.getNumpyArray(fname)
+
+        fname = "{}_supportWeights_{}_{}.npy".format(filename, classifier, iteration)
+        self._supportWeights = parser.getNumpyArray(fname)
+
+        fname = "{}_supportLabels_{}_{}.npy".format(filename, classifier, iteration)
+        self._supportLabels  = parser.getNumpyArray(fname)
+
+        fname = "{}_b_{}_{}.npy".format(filename, classifier, iteration)
+        self._b              = parser.getNumpyArray(fname)[0]
 
 
 
