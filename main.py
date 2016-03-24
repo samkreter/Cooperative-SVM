@@ -119,13 +119,12 @@ def predictBootstrap(svms):
         count = []
         for j, classifier in enumerate(classifiers):
             count.append(0)
-            if(not success):
-                # send to each svm to be tested for commitee vote
-                for k in range(0,NUM_COMMITTEES):
-                    # update count for each commitee vote in this class
-                    print(svms[j][k].predict(point))
-                    if(np.sign(svms[j][k].predict(point)) > 0):
-                        count[j] += 1
+            # send to each svm to be tested for commitee vote
+            for k in range(0,NUM_COMMITTEES):
+                # update count for each commitee vote in this class
+                print(svms[j][k].predict(point))
+                if(np.sign(svms[j][k].predict(point)) > 0):
+                    count[j] += 1
         print("Count array for each classifier: ", count)
         # Get classification of point
         
