@@ -8,7 +8,7 @@
 
 \begin{document}
 
-\title{Implementing an SVM:\\ A shot in the dark}
+\title{Implementing an SVM:\\ A Shot in the Dark}
 
 \author{Daniel Hanson, Sam Kreter, Brendan Marsh, and Christina R.S. Mosnick}
 
@@ -31,27 +31,32 @@ The abstract goes here.
 
 %\hfill August 26, 2015
 
-\subsection{Subsection \#1}
-Subsection text here. Sample text and stuff goes here.
-
 \section{Implementation}
     Our SVM implementation first uses a parser class to transform the input data.  The parser is able to load and write numpy arrays of the testing and label data.  To transform the label sets for training individual class dividers, the parser sets all labels that are of the current class being trained to 1, and to -1 for the rest of the classes.  Additionally, we created a set of kernel functions to be passed into the svm instance dynamically, depending on the particular kernel needed.  We packaged the training and prediction functionalities into instances of svm classes, which additionally store trained variables such as the support vectors and the bias.  This allows us to train and store multiple svms.\\
 
-    The SVM class is instantiated with the pre-processed samples (feature vectors), their corresponding labels (1 or -1), the appropriate kernel function, and its necessary parameters (such as sigma for an RBF function).  In the training function, the support vectors are computed by finding the Gram Matrix, which stores all possible combinations of data points being passed into the kernel. We then solve for the dual form using lagrangian optimization (below), using cvxopt for our quadratic programming solver.
+    The SVM class is instantiated with the pre-processed samples (feature vectors), their corresponding labels (1 or -1), the appropriate kernel function, and its necessary parameters (such as $\sigma$ for an RBF function).  In the training function, the support vectors are computed by finding the Gram Matrix, which stores all possible combinations of data points being passed into the kernel. We then solve for the dual form using lagrangian optimization (below), using cvxopt for our quadratic programming solver.
 
     \subsection{Dual Representation (from Eqn. 7.2 \cite{BishopBook})}
     \begin{equation}
     \mathbf{L} = \sum\limits_{N} a_n - \frac{1}{2} \sum\limits_{n} \sum\limits_{m} a_n a_m t_n t_m \mathbf{K}
     \end{equation}
 
+    In order to use the CVXOPT solver we need to convert the Dual Representation into the standard quadratic programming form shown in equation \ref{eq:quad}.
+
     \subsection{Quadratic Programming Problem \cite{QuadraticCVXOPT}}
     \begin{equation}
+    \label{eq:quad}
     \min_{\mathbf{x}} \frac{1}{2}\mathbf{x}^T\mathbf{P}\mathbf{x} - \mathbf{Q}^T\mathbf{x}
     \end{equation}
 
     \subsection{Parameters for Quadratic Programming}
+
+    By transforming the dual respresentation we derived the parameters shown in equations \ref{eq:P} and \ref{eq:Q}.
+
     \begin{eqnarray}
+    \label{eq:P}
     P = \sum\limits_{n} \sum\limits_{m} t_n t_m \mathbf{K}\\
+    \label{eq:Q}
     Q = \left(\begin{IEEEeqnarraybox*}[][c]{,c/c/c,}
     -1&-1&-1\\
     -1&-1&-1\\
@@ -63,16 +68,24 @@ Subsection text here. Sample text and stuff goes here.
     \end{itemize}
 
     \subsection{Constraints}
+
+    Next we changed the constraints into a form that is necessary for the quadratic programming solver as shown in equations \ref{eq:Gxh}, \ref{eq:Axb}.
+
     \begin{equation}
+    \label{eq:Gxh}
     \mathbf{G} \mathbf{x} \preceq \mathbf{h}
     \end{equation}
 
     \begin{equation}
-    a_n \geq 0 \rightarrow -a_n \leq 0
+    \label{eq:Axb}
+    \mathbf{A} \mathbf{x} \leq \mathbf{b}
     \end{equation}
 
+    Equation \ref{eq:stdConstraints} is referencing the transformation for the standard constraints.
+
     \begin{equation}
-    a_n \leq \mathbf{C}
+    \label{eq:stdConstraints}
+    a_n \geq 0 \rightarrow -a_n \leq 0
     \end{equation}
 
     \begin{equation}
@@ -91,6 +104,13 @@ Subsection text here. Sample text and stuff goes here.
     \end{IEEEeqnarraybox*}\right)
     \end{equation}
 
+    Equation \ref{eq:slackConstraints} is referencing the transformation for the slack constraints.
+
+    \begin{equation}
+    \label{eq:slackConstraints}
+    a_n \leq \mathbf{C}
+    \end{equation}
+
     \begin{equation}
     slack\mathbf{G} \left(\begin{IEEEeqnarraybox*}[][c]{,c/c/c,}
     1&0&0\\
@@ -107,11 +127,10 @@ Subsection text here. Sample text and stuff goes here.
     \end{IEEEeqnarraybox*}\right)
     \end{equation}
 
-    \begin{equation}
-    \mathbf{A} \mathbf{x} \leq \mathbf{b}
-    \end{equation}
+    Equation \ref{eq:equalityConstraints} is referencing the transformation for the equality constraints.
 
     \begin{equation}
+    \label{eq:equalityConstraints}
     \sum\limits_{n = 1}^Na_n t_n = 0
     \end{equation}
 
@@ -132,7 +151,7 @@ Subsection text here. Sample text and stuff goes here.
     \end{equation}
 
     \subsection{Bias}
-    Solving for \textit{a} gives us the indices for the support vectors. These, along with the passed in data, give us the vectors, labels and weights of the support vectors. We can use all of this information to find the bias and start computing predictions on the functions. The bias is simply computed from the form in equation \ref{eq:bias}:
+    Solving for \textit{a} gives us the indices for the support vectors. These, along with the passed in data, give us the vectors, labels, and weights of the support vectors. We can use all of this information to find the bias and start computing predictions on the functions. The bias is simply computed from the form in equation \ref{eq:bias}:
 
     \begin{equation}
     \label{eq:bias}
