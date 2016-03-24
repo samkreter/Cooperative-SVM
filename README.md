@@ -14,7 +14,15 @@ cvxopt >= 1.1.8
 
 ##Running the code with default settings
 
-Put the input data into the train function in train.py and then use the test function in test.py to test the data.
+In order to train the SVM, run the train.py python file with two arguments X_train and Y_train, where X_train is the input training data and Y_train is the desired output vector.
+
+`python train.py X_train Y_train`
+
+In order to test the SVM, run the test.py python file with one argument X_test, when the X_test is the input testing data points.
+
+`python test.py X_test`
+
+The result of test.py will be a vector with the predicted classification of each input testing data point.
 
 ##Parameters
 
