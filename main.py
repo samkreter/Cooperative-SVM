@@ -1,5 +1,7 @@
 import numpy as np
 import sys
+import math
+
 #homemade lovin'
 from svm import svm
 import parser
@@ -22,12 +24,12 @@ def main():
     # PARAMETERS
     trainingSampleSize = 1000
     numBootstraps = 1
-    bootstrapSampleSize = 0.5 * trainingSampleSize
-    testSize = 300
+    bootstrapSampleSize = math.floor(0.7 * trainingSampleSize)
+    testSize = 500
     minConfidence = 0
-    C = 10
-    minSupportVector = 0.05
-    RBF_sigma = 2
+    C = 1
+    minSupportVector = 0.1
+    RBF_sigma = 1
     kernel = kernels.rbf(RBF_sigma)
 
     # Training Data
@@ -56,20 +58,36 @@ def trainBootstrapSVMs(X,Y,kernel,samps,numCommitteeMembers,minSupportVector,C):
     for i, currClass in enumerate(classesToTrain):
         classSvms = []
 
-        # adjust Y to be of form not class, class; (-1, 1)
-        newY = parser.adjustLabels(Y, currClass)
-
         # bootstrap each group 
         for j in range(0, numCommitteeMembers):
           
             # shuffle arrays together to keep points with classifiers correct 
-            #combined = list(zip(X, newY))
-            #random.shuffle(combined)
-            #newX[:], newY[:] = zip(*combined)
+            # combined = list(zip(newX, newY))
+            # random.shuffle(combined)
+            # newX, newY = zip(*combined)
+            # trainX = newX[:samps]
+            # trainY = newY[:samps]
+
+            # adjust Y to be of form not class, class; (-1, 1)
+            newY = Y #parser.adjustLabels(Y, currClass)
+            newX = X
+
+            (trainX,trainY) = randSubset(newX,newY,samps)
+            trainY = parser.adjustLabels(trainY, currClass)
+
+            #trainX = X
+            #trainY = newY
+            #for k in range(samps):
+            #    index = math.floor(np.random.rand()*(len(X)-1))
+            #    trainX[k] = X[index]
+            #    trainY[k] = newY[index]
+
+            #trainX = np.array(trainX)
+            #trainY = np.array(trainY)
 
             # Get training groups
-            trainY = newY[:samps]
-            trainX = X[:samps]
+            #trainY = newY[:samps]
+            #trainX = X[:samps]
             
             # train group
             classSvms.append(svm(trainX, trainY, C, kernel, minSupportVector))
@@ -83,8 +101,6 @@ def predictMeanBootstrap(svms,minConfidence,x):
     numClasses, numMembers = np.array(svms).shape
     means = []
 
-    print()
-
     for i,committee in enumerate(svms):
         means.append(0)
 
@@ -92,8 +108,6 @@ def predictMeanBootstrap(svms,minConfidence,x):
             means[i] += member.predict(x)
 
         means[i] /= numMembers 
-
-    #print(means)
 
     if max(means) < minConfidence:
         return -1
@@ -127,7 +141,7 @@ def randomTest(svms,X,Y,numTests,minConfidence):
     for xn,yn in zip(Xshuf,Yshuf):
         if predictMeanBootstrap(svms,minConfidence,xn) == yn:
             correct += 1
-        print(predictMeanBootstrap(svms,minConfidence,xn),yn)
+        #print(predictMeanBootstrap(svms,minConfidence,xn),yn)
 
     return correct / numTests
 
