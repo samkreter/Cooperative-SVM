@@ -35,12 +35,12 @@ The abstract goes here.
 Subsection text here. Sample text and stuff goes here.
 
 \section{Implementation}
-    \subsection{Dual Representation (from Eqn. 7.2)}
+    \subsection{Dual Representation (from Eqn. 7.2 \cite{BishopBook})}
     \begin{equation}
     \mathbf{L} = \sum\limits_{N} a_n - \frac{1}{2} \sum\limits_{n} \sum\limits_{m} a_n a_m t_n t_m \mathbf{K}
     \end{equation}
 
-    \subsection{Quadratic Programming Problem}
+    \subsection{Quadratic Programming Problem \cite{QuadraticCVXOPT}}
     \begin{equation}
     \min_{\mathbf{x}} \frac{1}{2}\mathbf{x}^T\mathbf{P}\mathbf{x} - \mathbf{Q}^T\mathbf{x}
     \end{equation}
@@ -54,11 +54,16 @@ Subsection text here. Sample text and stuff goes here.
     -1&-1&-1%
     \end{IEEEeqnarraybox*}\right)
     \end{eqnarray}
+    \begin{itemize}
+    \item Where Q's dimensions are determined by number of samples
+    \end{itemize}
 
     \subsection{Constraints}
     \begin{equation}
     \mathbf{G} \mathbf{x} \preceq \mathbf{h}
     \end{equation}
+
+
 
 \section{Experiments}
 
@@ -76,6 +81,9 @@ Christina would like to thank her mom for her support.
 \fi
 
 \begin{thebibliography}{1}
+
+\bibitem{BishopBook}
+  Bishop, Christopher M. \emph{Pattern Recognition And Machine Learning.} New York: Springer, 2006. Print.
 
 \bibitem{TullochSVMpy}
   Tulloch, Andrew. \emph{A Basic Soft-Margin Kernel SVM Implementation In Python} Tullo.ch. N.p., 2013. Web. 24 Mar. 2016.
