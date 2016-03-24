@@ -35,7 +35,30 @@ The abstract goes here.
 Subsection text here. Sample text and stuff goes here.
 
 \section{Implementation}
-Implementation paragraph text goes here.
+    \subsection{Dual Representation (from Eqn. 7.2)}
+    \begin{equation}
+    \mathbf{L} = \sum\limits_{N} a_n - \frac{1}{2} \sum\limits_{n} \sum\limits_{m} a_n a_m t_n t_m \mathbf{K}
+    \end{equation}
+
+    \subsection{Quadratic Programming Problem}
+    \begin{equation}
+    \min_{\mathbf{x}} \frac{1}{2}\mathbf{x}^T\mathbf{P}\mathbf{x} - \mathbf{Q}^T\mathbf{x}
+    \end{equation}
+
+    \subsection{Parameters for Quadratic Programming}
+    \begin{eqnarray}
+    P = \sum\limits_{n} \sum\limits_{m} t_n t_m \mathbf{K}\\
+    Q = \left(\begin{IEEEeqnarraybox*}[][c]{,c/c/c,}
+    -1&-1&-1\\
+    -1&-1&-1\\
+    -1&-1&-1%
+    \end{IEEEeqnarraybox*}\right)
+    \end{eqnarray}
+
+    \subsection{Constraints}
+    \begin{equation}
+    \mathbf{G} \mathbf{x} \preceq \mathbf{h}
+    \end{equation}
 
 \section{Experiments}
 
