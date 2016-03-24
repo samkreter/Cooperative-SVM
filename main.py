@@ -6,71 +6,48 @@ import parser
 import kernels
 import random
 
-NUM_COMMITTEES = 2
-
 import matplotlib.pyplot as plt
 from randData import twoClasses
 from subset import randSubset
 
-#yall know what this bad boy does
 def main():
 
     X = parser.getNumpyArray("TrainX.npy")
     Y = parser.getNumpyArray("TrainY.npy")
     #(X,Y) = twoClasses(600,1,2)
 
+    # Shuffle the data
     (Xshuf,Yshuf) = randSubset(X,Y,1656)
 
     # PARAMETERS
-    sampleSize = 500
+    trainingSampleSize = 1000
+    numBootstraps = 1
+    bootstrapSampleSize = 0.5 * trainingSampleSize
     testSize = 300
-    targetClass = 4
+    minConfidence = 0
+    C = 10
+    minSupportVector = 0.05
+    RBF_sigma = 2
+    kernel = kernels.rbf(RBF_sigma)
 
     # Training Data
-    x1 = Xshuf[:sampleSize]
-    y1 = Yshuf[:sampleSize]
+    x1 = Xshuf[:trainingSampleSize]
+    y1 = Yshuf[:trainingSampleSize]
 
     # Test Data
-    x2 = Xshuf[sampleSize:sampleSize+testSize]
-    y2 = Yshuf[sampleSize:sampleSize+testSize]
+    x2 = Xshuf[trainingSampleSize : trainingSampleSize + testSize]
+    y2 = Yshuf[trainingSampleSize : trainingSampleSize + testSize]
 
     # Train It Up
-    t = svm(x1,parser.adjustLabels(y1,targetClass),kernels.rbf(2))
-    #print(parser.adjustLabels(y1,1))
+    SVMs = trainBootstrapSVMs(x1,y1,kernel,bootstrapSampleSize,numBootstraps,minSupportVector,C)
 
-    correct = 0
-    for i in range(testSize):
-        correct += (t.predict(x2[i])>0 and y2[i]==1) or (t.predict(x2[i])<0 and y2[i]!=1)
-        #print(t.predict(x2[i])
-        #print(y2[i])
-    print(correct/testSize)
+    # Test the SVMs
+    percentage = randomTest(SVMs,x2,y2,testSize,minConfidence)
+    print(percentage)
 
 
-
-# adjusts the y labels to 1 for curr and -1 for not current
-# \param xFileName: filename for the N training vectors
-# \param yFilename: filename for the N lables for the training vectors
-# \param Kernel:  the kernel function to user on the data
-# \return: list of trained svms
-def trainSVMs(xFileName, yFIleName, Kernel):
+def trainBootstrapSVMs(X,Y,kernel,samps,numCommitteeMembers,minSupportVector,C):
     svms = []
-
-    Y = parser.getNumpyArray(yFIleName)
-    X = parser.getNumpyArray(xFileName)
-
-    classToTrain = np.unique(Y.ravel())
-
-    for currClass in classToTrain:
-        svms.append(svm(X,parser.adjustLabels(Y,currClass),Kernel))
-
-    return svms
-
-
-def trainBootstrap():
-    numCrossValidationGroups = 5;
-    svms = []
-    Y = parser.getNumpyArray("TrainY.npy")
-    X = parser.getNumpyArray("TrainX.npy")
 
     # get each class label
     classesToTrain = np.unique(Y.ravel())
@@ -79,55 +56,80 @@ def trainBootstrap():
     for i, currClass in enumerate(classesToTrain):
         classSvms = []
 
-        # adjust Y to be of form not class, class (-1, 1)
+        # adjust Y to be of form not class, class; (-1, 1)
         newY = parser.adjustLabels(Y, currClass)
 
-        # bootstrap each group 7 times.  Use 500 each time
-        for j in range(0, NUM_COMMITTEES):
-            print("Training class %d.  In iteration %d", currClass, j)
+        # bootstrap each group 
+        for j in range(0, numCommitteeMembers):
+          
             # shuffle arrays together to keep points with classifiers correct 
-            combined = list(zip(X, newY))
-            random.shuffle(combined)
-            X[:], newY[:] = zip(*combined)
+            #combined = list(zip(X, newY))
+            #random.shuffle(combined)
+            #newX[:], newY[:] = zip(*combined)
 
-            # Get training groups: first 500 in group
-            trainY = newY[:500]
-            trainX = X[:500]
+            # Get training groups
+            trainY = newY[:samps]
+            trainX = X[:samps]
             
             # train group
-            classSvms.append(svm(trainX, parser.adjustLabels(trainY, currClass), kernels.linear()))
+            classSvms.append(svm(trainX, trainY, C, kernel, minSupportVector))
 
         svms.append(classSvms)
 
     return svms
 
-# takes pre-trained svms and runs points through them, reporting statistics
-def predictBootstrap(svms):
-    Y = parser.getNumpyArray("TrainY.npy")
-    X = parser.getNumpyArray("TrainX.npy")
 
-    # shuffle arrays together to keep points with classifiers correct 
-    combined = list(zip(X, Y))
-    random.shuffle(combined)
-    X[:], Y[:] = zip(*combined)
-    X = X[:1]
-    classifiers = np.unique(Y.ravel())
+def predictMeanBootstrap(svms,minConfidence,x):
+    numClasses, numMembers = np.array(svms).shape
+    means = []
 
-    for i, point in enumerate(X):
-        print(point)
-        # for each classifier j
-        count = []
-        for j, classifier in enumerate(classifiers):
-            count.append(0)
-            # send to each svm to be tested for commitee vote
-            for k in range(0,NUM_COMMITTEES):
-                # update count for each commitee vote in this class
-                print(svms[j][k].predict(point))
-                if(np.sign(svms[j][k].predict(point)) > 0):
-                    count[j] += 1
-        print("Count array for each classifier: ", count)
-        # Get classification of point
-        
+    print()
+
+    for i,committee in enumerate(svms):
+        means.append(0)
+
+        for member in committee:
+            means[i] += member.predict(x)
+
+        means[i] /= numMembers 
+
+    #print(means)
+
+    if max(means) < minConfidence:
+        return -1
+    else:
+        return np.argmax(means) + 1
+
+
+def predictVarWeightedBootstrap(svms,sigma,minConfidence,x):
+    numClasses, numMembers = np.array(svms).shape
+    scores = []
+
+    for i,committee in enumerate(svms):
+        scores.append(0)
+        committeeResults = []
+
+        for member in committee:
+            committeeResults.append(member.predict(x))
+
+        scores[i] = np.mean(committeeResults) - sigma*np.std(committeeResults)
+
+    if max(scores) < minConfidence:
+        return -1
+    else:
+        return np.argmax(scores) + 1
+
+def randomTest(svms,X,Y,numTests,minConfidence):
+
+    Xshuf,Yshuf = randSubset(X,Y,numTests)
+    correct = 0
+
+    for xn,yn in zip(Xshuf,Yshuf):
+        if predictMeanBootstrap(svms,minConfidence,xn) == yn:
+            correct += 1
+        print(predictMeanBootstrap(svms,minConfidence,xn),yn)
+
+    return correct / numTests
 
 
 def trainAndStoreSvms(fname):
@@ -138,6 +140,7 @@ def trainAndStoreSvms(fname):
         for j, svm in enumerate(svmSet):
             svm.writeSelfToFile(fname, i, j)
     return svms
+
 
 def loadSvmsFromFile(fname, numClasses, numIterations):
     svms = [];

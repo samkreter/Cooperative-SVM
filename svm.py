@@ -5,19 +5,20 @@ import parser
 import multiplyer
 
 class svm():
-    def __init__(self, X,Y,Kernel, train=True):
+    def __init__(self,X,Y,C,Kernel,minSupportVector,train=True):
         self._x = X
         self._y = Y
-        self._c = 10
+        self._c = C
         self._b = None
         self._supportVectors = None
         self._supportLabels = None
         self._supportWeights = None
         self._kernel = Kernel
+        self._minSupportVector = minSupportVector
         if(train):
-            self.train()
+            self.train(minSupportVector)
 
-    def train(self):
+    def train(self,minSupportVector):
         A = self._compute_multipliers(self._x,self._y)
         # K = self._gramMatrix()
         # A = multiplyer.CalculateLagrangeMultipliers(self._y,K,self._c)
@@ -25,33 +26,18 @@ class svm():
         # this alot
         #It returns true for all indeces greater than 0 and false for less
         #if a=0 for an element that means it is not a support vector
-        supportIndexes = A > self._c / 10
+        supportIndexes = A > self._c * minSupportVector
 
         #now we can use that to use only the vectors that we need
         self._supportVectors = self._x[supportIndexes]
         self._supportWeights = A[supportIndexes]
         self._supportLables = self._y[supportIndexes]
-        print(len(self._supportLables))
+        print("Support Vectors:",len(self._supportLables))
 
-        #eqn 7.18
-        #using zip trick for the labes and vectors from the tullo blog reference [3]
-
-        # test = [self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)]
-
-        # print(test)
-        # exit()
-
-        self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)])
-        
-        #self._b = 0
-
-        #n = 0
-        #self._b = 0
-        #for i,tn in enumerate(self._supportLables):
-        #    if self._supportWeights[i] < self._c:
-        #        n = n+1
-        #        self._b += tn - self.predict(xn,0)
-        #self._b /= n
+        if len(self._supportLables) == 0:
+            self._b = 0
+        else:
+            self._b = np.mean([tn - self.predict(xn,0) for (tn,xn) in zip(self._supportLables,self._supportVectors)])
 
 
     def _compute_multipliers(self, X, y):
@@ -67,12 +53,9 @@ class svm():
         P = cvxopt.matrix(np.outer(y, y) * K)
         q = cvxopt.matrix(-1 * np.ones(n_samples))
 
-        # -a_i \leq 0
-        # TODO(tulloch) - modify G, h so that we have a soft-margin classifier
         G_std = cvxopt.matrix(np.diag(np.ones(n_samples) * -1))
         h_std = cvxopt.matrix(np.zeros(n_samples))
 
-        # a_i \leq c
         G_slack = cvxopt.matrix(np.diag(np.ones(n_samples)))
         h_slack = cvxopt.matrix(np.ones(n_samples) * self._c)
 
@@ -88,14 +71,16 @@ class svm():
         return np.ravel(solution['x'])
 
 
-
-
     # eqn 7.13
     def predict(self, x, b=None):
         if(b == None):
             b = self._b
 
         summation = b;
+
+        if len(self._supportLables) == 0:
+            return summation
+
         for n, x_n in enumerate(self._supportVectors):
             summation += self._supportWeights[n] * self._supportLables[n] * self._kernel(x, x_n)
         return summation.item()
