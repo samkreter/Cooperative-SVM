@@ -23,9 +23,8 @@ class svm():
         # A = multiplyer.CalculateLagrangeMultipliers(self._y,K,self._c)
         #cool trick I got from tullo with numpy arrays, I'm definitly useing
         # this alot
-        #It returns true for all indices greater than 0 and false for less
+        #It returns true for all indeces greater than 0 and false for less
         #if a=0 for an element that means it is not a support vector
-
         supportIndexes = A > self._c / 10
 
         #now we can use that to use only the vectors that we need
@@ -53,6 +52,7 @@ class svm():
         #        n = n+1
         #        self._b += tn - self.predict(xn,0)
         #self._b /= n
+
 
     def _compute_multipliers(self, X, y):
         n_samples, n_features = X.shape
@@ -82,10 +82,12 @@ class svm():
         A = cvxopt.matrix(y, (1, n_samples))
         b = cvxopt.matrix(0.0)
 
-        solution = cvxopt.solvers.qp(P, q, G, h, A, b)
-        
+        solution = cvxopt.solvers.qp(P, q,G,h,A,b)
+
         # Lagrange multipliers
         return np.ravel(solution['x'])
+
+
 
 
     # eqn 7.13
@@ -95,7 +97,7 @@ class svm():
 
         summation = b;
         for n, x_n in enumerate(self._supportVectors):
-            summation += self._supportWeights[n] * self._supportLabels[n] * self._kernel(x, x_n)
+            summation += self._supportWeights[n] * self._supportLables[n] * self._kernel(x, x_n)
         return summation.item()
 
     # def langranging_multipliers():

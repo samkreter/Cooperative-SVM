@@ -34,7 +34,6 @@ def main():
     x2 = Xshuf[sampleSize:sampleSize+testSize]
     y2 = Yshuf[sampleSize:sampleSize+testSize]
 
-
     # Train It Up
     t = svm(x1,parser.adjustLabels(y1,targetClass),kernels.rbf(2))
     #print(parser.adjustLabels(y1,1))
