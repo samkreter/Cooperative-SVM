@@ -3,10 +3,10 @@ import sys
 import math
 
 #homemade lovin'
-from svm import svm
+import coS
+
+
 import parser
-import kernels
-import random
 
 import matplotlib.pyplot as plt
 from randData import twoClasses
@@ -31,7 +31,7 @@ def trainIdeal(inputfileX, inputfileY):
     C = 4
     minSupportVector = 0.1
     RBF_sigma = 1
-    kernel = kernels.rbf(RBF_sigma)
+    kernel = coSvm.Kernel.rbf(RBF_sigma)
 
     # Training Data
     x1 = Xshuf[:trainingSampleSize]
@@ -95,7 +95,7 @@ def trainBootstrapSVMs(X,Y,kernel,samps,numCommitteeMembers,minSupportVector,C):
 
 
             # train group
-            classSvms.append(svm(trainX, trainY, C, kernel, minSupportVector))
+            classSvms.append(coSvm.svm(trainX, trainY, C, kernel, minSupportVector))
 
         svms.append(classSvms)
 
