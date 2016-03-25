@@ -186,7 +186,7 @@ if __name__ == '__main__':
         svms = loadSvmsFromFile("trainedSVMData/test", 8, 7)
         predictBootstrap(svms)
     else:
-        trainIdeal()
+        trainIdeal(sys.argv[1],sys.argv[2])
 
 
 
