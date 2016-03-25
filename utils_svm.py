@@ -3,10 +3,8 @@ import sys
 import math
 
 #homemade lovin'
-import coS
+import coSvm
 
-
-import parser
 
 import matplotlib.pyplot as plt
 from randData import twoClasses
@@ -15,8 +13,8 @@ from subset import randSubset
 
 def trainIdeal(inputfileX, inputfileY):
 
-    X = parser.getNumpyArray(inputfileX)
-    Y = parser.getNumpyArray(inputfileY)
+    X = coSvm.getNumpyArray(inputfileX)
+    Y = coSvm.getNumpyArray(inputfileY)
     #(X,Y) = twoClasses(600,1,2)
 
     # Shuffle the data
@@ -73,11 +71,11 @@ def trainBootstrapSVMs(X,Y,kernel,samps,numCommitteeMembers,minSupportVector,C):
             # trainY = newY[:samps]
 
             # adjust Y to be of form not class, class; (-1, 1)
-            newY = Y #parser.adjustLabels(Y, currClass)
+            newY = Y #coSvm.adjustLabels(Y, currClass)
             newX = X
 
             (trainX,trainY) = randSubset(newX,newY,samps)
-            trainY = parser.adjustLabels(trainY, currClass)
+            trainY = coSvm.adjustLabels(trainY, currClass)
 
             #trainX = X
             #trainY = newY
